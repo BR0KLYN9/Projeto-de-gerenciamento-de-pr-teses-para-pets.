@@ -25,7 +25,7 @@ import {
   ChevronRight,
   ChevronDown,
   UploadCloud,
-  Cube,
+  Box, // Replaced Cube with Box
   PawPrint,
   FileText,
   Loader2,
@@ -800,7 +800,7 @@ const ProstheticDesign = () => {
                           </div>
                         ) : !isModelReady ? (
                           <div className="text-center py-12">
-                            <Cube className="h-12 w-12 mx-auto text-muted-foreground/30 mb-4" />
+                            <Box className="h-12 w-12 mx-auto text-muted-foreground/30 mb-4" /> {/* Changed from Cube to Box */}
                             <Button
                               onClick={handleGenerateModel}
                               className="bg-ocean-600 hover:bg-ocean-700"

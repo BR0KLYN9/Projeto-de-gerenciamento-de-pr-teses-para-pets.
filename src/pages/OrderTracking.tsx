@@ -1,4 +1,3 @@
-
 import { Layout } from "@/components/Layout";
 import { useState } from "react";
 import { 
@@ -29,7 +28,8 @@ import {
   ChevronRight,
   Mail,
   Phone,
-  ChevronDown
+  ChevronDown,
+  FileDown
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -773,7 +773,7 @@ const OrderTracking = () => {
                                 Notificar Cliente
                               </Button>
                               <Button variant="outline" onClick={() => toast.success("Detalhes do pedido exportados!")}>
-                                <Download className="h-4 w-4 mr-2" />
+                                <FileDown className="h-4 w-4 mr-2" />
                                 Exportar Detalhes
                               </Button>
                               

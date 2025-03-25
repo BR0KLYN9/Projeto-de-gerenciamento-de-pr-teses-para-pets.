@@ -1,4 +1,3 @@
-
 import { Layout } from "@/components/Layout";
 import { useState } from "react";
 import { 
@@ -40,7 +39,8 @@ import {
   ClipboardList,
   ClipboardCheck,
   Edit,
-  ExternalLink
+  ExternalLink,
+  Map
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -90,8 +90,8 @@ const SAMPLE_TICKETS = [
     productId: "OB-2023-001",
     subject: "Ajuste necessário na prótese",
     description: "A prótese está causando um pouco de desconforto na parte superior. Precisamos de ajustes.",
-    status: "open",
-    priority: "high",
+    status: "aberto",
+    priority: "alta",
     createdAt: "2023-09-05",
     updatedAt: "2023-09-05",
     messages: [
@@ -130,7 +130,7 @@ const SAMPLE_TICKETS = [
     productId: "OB-2023-002",
     subject: "Dúvidas sobre adaptação",
     description: "Estou com dúvidas sobre como ajudar Luna a se adaptar à prótese",
-    status: "in_progress",
+    status: "em_andamento",
     priority: "normal",
     createdAt: "2023-09-03",
     updatedAt: "2023-09-04",
@@ -181,7 +181,7 @@ const SAMPLE_TICKETS = [
     productId: "OB-2023-003",
     subject: "Fisioterapia pós-adaptação",
     description: "Procurando recomendações para fisioterapia",
-    status: "closed",
+    status: "fechado",
     priority: "normal",
     createdAt: "2023-08-25",
     updatedAt: "2023-08-29",
@@ -247,7 +247,7 @@ const SAMPLE_TICKETS = [
     productId: "OB-2023-004",
     subject: "Agendamento de consulta de acompanhamento",
     description: "Solicitando agendamento para avaliação de progresso",
-    status: "open",
+    status: "aberto",
     priority: "normal",
     createdAt: "2023-09-04",
     updatedAt: "2023-09-04",
@@ -271,8 +271,8 @@ const SAMPLE_TICKETS = [
     productId: "OB-2023-005",
     subject: "Dúvida sobre garantia",
     description: "Solicitando informações sobre a política de garantia",
-    status: "closed",
-    priority: "low",
+    status: "fechado",
+    priority: "baixa",
     createdAt: "2023-08-22",
     updatedAt: "2023-08-23",
     closedAt: "2023-08-23",
@@ -394,8 +394,8 @@ const THERAPY_PARTNERS = [
   }
 ];
 
-type TicketStatus = "open" | "in_progress" | "closed";
-type TicketPriority = "low" | "normal" | "high";
+type TicketStatus = 'aberto' | 'em_andamento' | 'fechado' | 'resolvido';
+type TicketPriority = 'baixa' | 'normal' | 'alta';
 
 const Support = () => {
   const [tickets, setTickets] = useState(SAMPLE_TICKETS);
@@ -458,7 +458,7 @@ const Support = () => {
     const updatedTicket = {
       ...selectedTicket,
       messages: [...selectedTicket.messages, newMessageObj],
-      status: selectedTicket.status === "open" ? "in_progress" as TicketStatus : selectedTicket.status,
+      status: selectedTicket.status === "aberto" ? "em_andamento" : selectedTicket.status,
       updatedAt: new Date().toISOString().split('T')[0]
     };
 
@@ -482,7 +482,7 @@ const Support = () => {
     const newTicketObj = {
       id: `ST-2023-${tickets.length + 1}`.padStart(11, '0'),
       ...newTicket,
-      status: "open" as TicketStatus,
+      status: "aberto" as TicketStatus,
       createdAt: currentDate,
       updatedAt: currentDate,
       messages: [
@@ -517,7 +517,7 @@ const Support = () => {
       ...selectedTicket,
       status,
       updatedAt: new Date().toISOString().split('T')[0],
-      ...(status === "closed" ? { closedAt: new Date().toISOString().split('T')[0] } : {})
+      ...(status === "fechado" ? { closedAt: new Date().toISOString().split('T')[0] } : {})
     };
 
     const updatedTickets = tickets.map(ticket => 
@@ -670,26 +670,26 @@ const Support = () => {
                         Todos
                       </Button>
                       <Button
-                        variant={statusFilter === "open" ? "default" : "outline"}
+                        variant={statusFilter === "aberto" ? "default" : "outline"}
                         size="sm"
-                        className={statusFilter === "open" ? "bg-amber-600 hover:bg-amber-700" : ""}
-                        onClick={() => setStatusFilter("open")}
+                        className={statusFilter === "aberto" ? "bg-amber-600 hover:bg-amber-700" : ""}
+                        onClick={() => setStatusFilter("aberto")}
                       >
                         Abertos
                       </Button>
                       <Button
-                        variant={statusFilter === "in_progress" ? "default" : "outline"}
+                        variant={statusFilter === "em_andamento" ? "default" : "outline"}
                         size="sm"
-                        className={statusFilter === "in_progress" ? "bg-purple-600 hover:bg-purple-700" : ""}
-                        onClick={() => setStatusFilter("in_progress")}
+                        className={statusFilter === "em_andamento" ? "bg-purple-600 hover:bg-purple-700" : ""}
+                        onClick={() => setStatusFilter("em_andamento")}
                       >
                         Em Andamento
                       </Button>
                       <Button
-                        variant={statusFilter === "closed" ? "default" : "outline"}
+                        variant={statusFilter === "fechado" ? "default" : "outline"}
                         size="sm"
-                        className={statusFilter === "closed" ? "bg-green-600 hover:bg-green-700" : ""}
-                        onClick={() => setStatusFilter("closed")}
+                        className={statusFilter === "fechado" ? "bg-green-600 hover:bg-green-700" : ""}
+                        onClick={() => setStatusFilter("fechado")}
                       >
                         Resolvidos
                       </Button>
@@ -760,7 +760,7 @@ const Support = () => {
                           <TicketStatusBadge status={selectedTicket.status as TicketStatus} />
                           <PriorityBadge priority={selectedTicket.priority as TicketPriority} />
                         </div>
-                        {selectedTicket.status !== "closed" && (
+                        {selectedTicket.status !== "fechado" && (
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button variant="outline" size="sm">
@@ -770,14 +770,14 @@ const Support = () => {
                             <DropdownMenuContent align="end">
                               <DropdownMenuLabel>Gerenciar Ticket</DropdownMenuLabel>
                               <DropdownMenuSeparator />
-                              {selectedTicket.status === "open" && (
-                                <DropdownMenuItem onClick={() => handleChangeTicketStatus("in_progress")}>
+                              {selectedTicket.status === "aberto" && (
+                                <DropdownMenuItem onClick={() => handleChangeTicketStatus("em_andamento")}>
                                   <Clock className="h-4 w-4 mr-2" />
                                   Marcar em Progresso
                                 </DropdownMenuItem>
                               )}
-                              {selectedTicket.status !== "closed" && (
-                                <DropdownMenuItem onClick={() => handleChangeTicketStatus("closed")}>
+                              {selectedTicket.status !== "fechado" && (
+                                <DropdownMenuItem onClick={() => handleChangeTicketStatus("fechado")}>
                                   <Check className="h-4 w-4 mr-2" />
                                   Marcar como Resolvido
                                 </DropdownMenuItem>
@@ -787,7 +787,7 @@ const Support = () => {
                                 Adicionar Recomendação
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => setScheduleDialogOpen(true)}>
-                                <Calendar className="h-4 w-4 mr-2" />
+                                <Map className="h-4 w-4 mr-2" />
                                 Agendar Consulta
                               </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -921,7 +921,7 @@ const Support = () => {
                       </div>
                       
                       {/* Reply Box */}
-                      {selectedTicket.status !== "closed" && (
+                      {selectedTicket.status !== "fechado" && (
                         <div className="space-y-3 pt-3 border-t">
                           <div className="flex items-center justify-between">
                             <Label htmlFor="reply" className="text-sm font-medium">
@@ -998,7 +998,7 @@ const Support = () => {
                             {article.excerpt}
                           </p>
                         </CardContent>
-                        <CardFooter className="flex justify-between items-center text-xs text-muted-foreground">
+                        <CardFooter className="flex justify-between text-xs text-muted-foreground">
                           <div className="flex items-center">
                             <Clock className="h-3 w-3 mr-1" />
                             {article.readingTime}
@@ -1054,7 +1054,7 @@ const Support = () => {
                       <CardContent className="space-y-3 pb-3">
                         <div className="text-sm">
                           <div className="flex items-center mb-1">
-                            <MapPin className="h-4 w-4 text-muted-foreground mr-2" />
+                            <Map className="h-4 w-4 text-muted-foreground mr-2" />
                             <span>{partner.address}</span>
                           </div>
                           <div className="flex items-center mb-1">
@@ -1092,7 +1092,7 @@ const Support = () => {
                           size="sm"
                           onClick={() => toast.success("Redirecionando para o mapa...")}
                         >
-                          <MapPin className="h-3.5 w-3.5 mr-1" />
+                          <Map className="h-3.5 w-3.5 mr-1" />
                           Ver no Mapa
                         </Button>
                         <Button 
@@ -1264,9 +1264,9 @@ const Support = () => {
                   <SelectValue placeholder="Selecione" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="low">Baixa</SelectItem>
+                  <SelectItem value="baixa">Baixa</SelectItem>
                   <SelectItem value="normal">Normal</SelectItem>
-                  <SelectItem value="high">Alta</SelectItem>
+                  <SelectItem value="alta">Alta</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -1406,17 +1406,17 @@ interface TicketStatusBadgeProps {
 const TicketStatusBadge = ({ status }: TicketStatusBadgeProps) => {
   const getStatusDetails = () => {
     switch (status) {
-      case "open":
+      case "aberto":
         return { 
           label: "Aberto", 
           color: "bg-amber-100 text-amber-800 hover:bg-amber-100 border-amber-300" 
         };
-      case "in_progress":
+      case "em_andamento":
         return { 
           label: "Em Andamento", 
           color: "bg-purple-100 text-purple-800 hover:bg-purple-100 border-purple-300" 
         };
-      case "closed":
+      case "fechado":
         return { 
           label: "Resolvido", 
           color: "bg-green-600 hover:bg-green-700 text-white" 
@@ -1430,7 +1430,7 @@ const TicketStatusBadge = ({ status }: TicketStatusBadgeProps) => {
 
   return (
     <Badge
-      variant={status === "closed" ? "default" : "outline"}
+      variant={status === "fechado" ? "default" : "outline"}
       className={color}
     >
       {label}
@@ -1445,7 +1445,7 @@ interface PriorityBadgeProps {
 const PriorityBadge = ({ priority }: PriorityBadgeProps) => {
   const getPriorityDetails = () => {
     switch (priority) {
-      case "low":
+      case "baixa":
         return { 
           label: "Baixa", 
           color: "bg-blue-100 text-blue-800 hover:bg-blue-100 border-blue-300" 
@@ -1455,7 +1455,7 @@ const PriorityBadge = ({ priority }: PriorityBadgeProps) => {
           label: "Normal", 
           color: "bg-green-100 text-green-800 hover:bg-green-100 border-green-300" 
         };
-      case "high":
+      case "alta":
         return { 
           label: "Alta", 
           color: "bg-red-100 text-red-800 hover:bg-red-100 border-red-300" 
@@ -1479,9 +1479,9 @@ const PriorityBadge = ({ priority }: PriorityBadgeProps) => {
 
 const getStatusLabel = (status: TicketStatus): string => {
   switch (status) {
-    case "open": return "Aberto";
-    case "in_progress": return "Em Andamento";
-    case "closed": return "Resolvido";
+    case "aberto": return "Aberto";
+    case "em_andamento": return "Em Andamento";
+    case "fechado": return "Resolvido";
     default: return "Desconhecido";
   }
 };
