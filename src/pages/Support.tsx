@@ -1,1505 +1,926 @@
+
 import { Layout } from "@/components/Layout";
 import { useState } from "react";
 import { 
   Card, 
   CardContent, 
   CardDescription, 
+  CardFooter, 
   CardHeader, 
-  CardTitle, 
-  CardFooter
+  CardTitle 
 } from "@/components/ui/card";
-import { 
-  Tabs, 
-  TabsContent, 
-  TabsList, 
-  TabsTrigger 
-} from "@/components/ui/tabs";
-import { 
-  MessageSquare,
-  Clock,
-  Search,
-  Dog,
-  Cat,
-  Mail,
-  Phone,
-  Calendar,
-  AlertCircle,
-  Tag,
-  Plus,
-  Send,
-  MessageCircle,
-  Star,
-  ChevronRight,
-  Check,
-  FileText,
-  HeartHandshake,
-  Paperclip,
-  Video,
-  Activity,
-  ClipboardList,
-  ClipboardCheck,
-  Edit,
-  ExternalLink,
-  Map
-} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { 
+  CheckCircle2, 
+  Clock, 
+  FileText, 
+  Calendar, 
+  MessageSquare, 
+  AlertCircle,
+  Map,
+  Send,
+  Phone,
+  RefreshCw,
+  XCircle,
+  Plus,
+  Tag
+} from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { 
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { 
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 
-// Sample support tickets
-const SAMPLE_TICKETS = [
+type TicketStatus = "open" | "in_progress" | "waiting" | "resolved" | "closed";
+type TicketPriority = "low" | "medium" | "high" | "urgent";
+
+interface TherapyRecommendation {
+  type: string;
+  description: string;
+  frequency: string;
+  duration: string;
+}
+
+interface AppointmentDetails {
+  date: string;
+  time: string;
+  practitioner: string;
+  location: string;
+  notes?: string;
+}
+
+interface Message {
+  id: string;
+  sender: "client" | "staff";
+  content: string;
+  timestamp: string;
+  attachments?: string[];
+}
+
+interface SupportTicket {
+  id: string;
+  clientName: string;
+  petName: string;
+  petType: string;
+  productId: string;
+  subject: string;
+  description: string;
+  status: TicketStatus;
+  priority: TicketPriority;
+  createdAt: string;
+  updatedAt: string;
+  messages: Message[];
+  therapyRecommendations: TherapyRecommendation;
+  scheduledAppointment: AppointmentDetails | null;
+  closedAt?: string;
+}
+
+// Sample data for tickets
+const sampleTickets: SupportTicket[] = [
   {
-    id: "ST-2023-001",
-    clientName: "Carlos Silva",
-    petName: "Rex",
-    petType: "dog",
-    productId: "OB-2023-001",
-    subject: "Ajuste necessário na prótese",
-    description: "A prótese está causando um pouco de desconforto na parte superior. Precisamos de ajustes.",
-    status: "aberto",
-    priority: "alta",
-    createdAt: "2023-09-05",
-    updatedAt: "2023-09-05",
+    id: "TK2505",
+    clientName: "Rodrigo Almeida",
+    petName: "Max",
+    petType: "Cachorro",
+    productId: "PT1023",
+    subject: "Ajuste na prótese frontal",
+    description: "A prótese parece um pouco apertada na pata frontal do Max. Ele demonstra desconforto após alguns minutos de uso.",
+    status: "open",
+    priority: "medium",
+    createdAt: "2025-05-14T08:30:00",
+    updatedAt: "2025-05-14T08:30:00",
     messages: [
       {
-        author: "Carlos Silva",
-        role: "cliente",
-        content: "Olá, a prótese do Rex está um pouco apertada na região superior e está causando desconforto. Poderiam me ajudar?",
-        timestamp: "2023-09-05T10:23:00",
-        attachments: []
-      },
-      {
-        author: "Ana Souza",
-        role: "suporte",
-        content: "Olá Carlos, lamento pelo desconforto. Poderia enviar fotos da região afetada? Isso nos ajudará a identificar o ajuste necessário.",
-        timestamp: "2023-09-05T14:30:00",
-        attachments: []
-      },
-      {
-        author: "Carlos Silva",
-        role: "cliente",
-        content: "Claro, acabei de enviar as fotos por e-mail. É possível ajustar sem precisar fazer uma nova prótese?",
-        timestamp: "2023-09-05T15:45:00",
-        attachments: [
-          { name: "foto1.jpg", size: "2.3 MB", type: "image" }
-        ]
-      }
-    ],
-    therapyRecommendations: null,
-    scheduledAppointment: null
-  },
-  {
-    id: "ST-2023-002",
-    clientName: "Marina Costa",
-    petName: "Luna",
-    petType: "cat",
-    productId: "OB-2023-002",
-    subject: "Dúvidas sobre adaptação",
-    description: "Estou com dúvidas sobre como ajudar Luna a se adaptar à prótese",
-    status: "em_andamento",
-    priority: "normal",
-    createdAt: "2023-09-03",
-    updatedAt: "2023-09-04",
-    messages: [
-      {
-        author: "Marina Costa",
-        role: "cliente",
-        content: "Olá, recebi a prótese da Luna, mas ela está tendo dificuldade para se adaptar. Vocês têm alguma recomendação?",
-        timestamp: "2023-09-03T09:15:00",
-        attachments: []
-      },
-      {
-        author: "Pedro Santos",
-        role: "suporte",
-        content: "Olá Marina! Entendo sua preocupação. A adaptação para gatos pode ser um pouco mais desafiadora. Deixe-me compartilhar algumas recomendações...",
-        timestamp: "2023-09-03T11:20:00",
-        attachments: []
-      },
-      {
-        author: "Pedro Santos",
-        role: "suporte",
-        content: "Preparei um guia especial para adaptação de gatos. Verifique o anexo abaixo. Recomendo também sessões curtas com a prótese, aumentando gradualmente o tempo.",
-        timestamp: "2023-09-03T11:25:00",
-        attachments: [
-          { name: "guia-adaptacao-gatos.pdf", size: "1.5 MB", type: "document" }
-        ]
-      },
-      {
-        author: "Marina Costa",
-        role: "cliente",
-        content: "Muito obrigada! Vou seguir essas recomendações. Uma dúvida: quanto tempo em média leva para a completa adaptação?",
-        timestamp: "2023-09-04T10:05:00",
-        attachments: []
+        id: "MSG001",
+        sender: "client",
+        content: "Bom dia, a prótese que recebemos parece estar um pouco apertada. O Max fica desconfortável depois de usá-la por alguns minutos. Precisamos de ajuste.",
+        timestamp: "2025-05-14T08:30:00"
       }
     ],
     therapyRecommendations: {
-      recommendedBy: "Dr. Ana Lima",
-      recommendation: "Exercícios leves de adaptação, 15 minutos, 3x ao dia",
-      date: "2023-09-04"
+      type: "Fisioterapia de Adaptação",
+      description: "Exercícios de adaptação para a nova prótese, focando em movimentos graduais e controlados",
+      frequency: "3 vezes por semana",
+      duration: "30 minutos por sessão"
     },
     scheduledAppointment: null
   },
   {
-    id: "ST-2023-003",
-    clientName: "João Mendes",
-    petName: "Toby",
-    petType: "dog",
-    productId: "OB-2023-003",
-    subject: "Fisioterapia pós-adaptação",
-    description: "Procurando recomendações para fisioterapia",
-    status: "fechado",
-    priority: "normal",
-    createdAt: "2023-08-25",
-    updatedAt: "2023-08-29",
-    closedAt: "2023-08-29",
+    id: "TK2504",
+    clientName: "Patrícia Santos",
+    petName: "Nina",
+    petType: "Gato",
+    productId: "PT1022",
+    subject: "Treinamento para uso da prótese",
+    description: "Nina recebeu a prótese há 5 dias e está tendo dificuldade em se adaptar. Precisamos de orientação para facilitar o processo.",
+    status: "in_progress",
+    priority: "medium",
+    createdAt: "2025-05-12T14:15:00",
+    updatedAt: "2025-05-13T10:20:00",
     messages: [
       {
-        author: "João Mendes",
-        role: "cliente",
-        content: "Olá! O Toby já está se adaptando muito bem com a prótese, mas gostaria de saber se vocês têm recomendações para fisioterapia que ajudariam no fortalecimento muscular.",
-        timestamp: "2023-08-25T16:40:00",
-        attachments: []
+        id: "MSG002",
+        sender: "client",
+        content: "Olá, a Nina está com dificuldade para se adaptar à prótese nova. Podem nos ajudar com algumas orientações?",
+        timestamp: "2025-05-12T14:15:00"
       },
       {
-        author: "Carla Oliveira",
-        role: "especialista",
-        content: "Olá João! Fico feliz em saber que o Toby está se adaptando bem. Para o caso dele, recomendamos algumas sessões de fisioterapia específicas que ajudarão no fortalecimento da musculatura.",
-        timestamp: "2023-08-26T09:30:00",
-        attachments: []
+        id: "MSG003",
+        sender: "staff",
+        content: "Boa tarde Patrícia! Entendemos a situação. Vamos agendar uma videochamada para amanhã para demonstrar algumas técnicas que podem ajudar a Nina a se adaptar melhor. Qual seria o melhor horário para vocês?",
+        timestamp: "2025-05-12T15:45:00"
       },
       {
-        author: "João Mendes",
-        role: "cliente",
-        content: "Isso seria ótimo. Vocês têm profissionais parceiros que recomendam?",
-        timestamp: "2023-08-26T10:45:00",
-        attachments: []
+        id: "MSG004",
+        sender: "client",
+        content: "Perfeito! Amanhã estamos disponíveis entre 14h e 16h. Qualquer horário nesse intervalo funciona para nós.",
+        timestamp: "2025-05-12T16:30:00"
       },
       {
-        author: "Carla Oliveira",
-        role: "especialista",
-        content: "Sim! Temos parceria com a Clínica PetFisio, que é especializada em reabilitação para animais com próteses. Estou enviando o contato e um plano inicial de exercícios que você pode fazer em casa.",
-        timestamp: "2023-08-28T14:15:00",
-        attachments: [
-          { name: "plano-exercicios-toby.pdf", size: "2.1 MB", type: "document" },
-          { name: "clinicas-parceiras.pdf", size: "1.2 MB", type: "document" }
-        ]
-      },
-      {
-        author: "João Mendes",
-        role: "cliente",
-        content: "Perfeito! Já entrei em contato com eles e agendei a primeira sessão. Muito obrigado pela ajuda!",
-        timestamp: "2023-08-29T11:20:00",
-        attachments: []
+        id: "MSG005",
+        sender: "staff",
+        content: "Ótimo! Vamos agendar para amanhã às 14:30. Enviaremos o link da chamada por e-mail. Até lá!",
+        timestamp: "2025-05-12T17:00:00"
       }
     ],
     therapyRecommendations: {
-      recommendedBy: "Dr. Paulo Ribeiro",
-      recommendation: "10 sessões de hidroterapia e exercícios de fortalecimento",
-      date: "2023-08-28"
+      type: "Adaptação Progressiva",
+      description: "Introdução gradual à prótese com períodos curtos de uso inicialmente, aumentando progressivamente",
+      frequency: "Diário",
+      duration: "Iniciar com 10 minutos, aumentando 5 minutos por dia"
     },
     scheduledAppointment: {
-      date: "2023-09-05",
-      time: "14:00",
-      with: "Dr. Paulo Ribeiro",
-      location: "Clínica PetFisio",
-      type: "fisioterapia"
+      date: "2025-05-13",
+      time: "14:30",
+      practitioner: "Dra. Camila Fernandes",
+      location: "Videochamada",
+      notes: "Demonstração de técnicas de adaptação para felinos"
     }
   },
   {
-    id: "ST-2023-004",
-    clientName: "Sofia Almeida",
-    petName: "Ziggy",
-    petType: "dog",
-    productId: "OB-2023-004",
-    subject: "Agendamento de consulta de acompanhamento",
-    description: "Solicitando agendamento para avaliação de progresso",
-    status: "aberto",
-    priority: "normal",
-    createdAt: "2023-09-04",
-    updatedAt: "2023-09-04",
+    id: "TK2503",
+    clientName: "Bruno Costa",
+    petName: "Rex",
+    petType: "Cachorro",
+    productId: "PT1019",
+    subject: "Fisioterapia pós-adaptação",
+    description: "Rex está usando a prótese há 3 semanas e se adaptou bem. Gostaria de saber se há algum exercício específico que possa ajudar a fortalecer os músculos.",
+    status: "resolved",
+    priority: "low",
+    createdAt: "2025-05-05T09:45:00",
+    updatedAt: "2025-05-11T16:30:00",
     messages: [
       {
-        author: "Sofia Almeida",
-        role: "cliente",
-        content: "Bom dia! Gostaria de agendar uma consulta de acompanhamento para o Ziggy. Já faz duas semanas que ele está usando a prótese e queria uma avaliação profissional do progresso.",
-        timestamp: "2023-09-04T08:50:00",
-        attachments: []
+        id: "MSG006",
+        sender: "client",
+        content: "Bom dia! O Rex está indo muito bem com a prótese, já se adaptou. Existem exercícios que possam ajudar a fortalecer os músculos da pata?",
+        timestamp: "2025-05-05T09:45:00"
+      },
+      {
+        id: "MSG007",
+        sender: "staff",
+        content: "Olá Bruno! Que ótima notícia sobre o Rex! Sim, temos alguns exercícios específicos que podem ajudar. Vou preparar um material com instruções e enviar para você ainda hoje.",
+        timestamp: "2025-05-05T11:20:00"
+      },
+      {
+        id: "MSG008",
+        sender: "staff",
+        content: "Bruno, segue em anexo o guia de exercícios de fortalecimento. Comece com 10 minutos diários e aumente gradualmente conforme o Rex for se sentindo confortável.",
+        timestamp: "2025-05-05T16:40:00"
+      },
+      {
+        id: "MSG009",
+        sender: "client",
+        content: "Muito obrigado! Já recebi o material e vamos começar hoje mesmo.",
+        timestamp: "2025-05-05T17:15:00"
+      },
+      {
+        id: "MSG010",
+        sender: "client",
+        content: "Queria dar um retorno - o Rex está respondendo super bem aos exercícios. Notamos uma melhora significativa na força e na coordenação!",
+        timestamp: "2025-05-11T15:45:00"
+      },
+      {
+        id: "MSG011",
+        sender: "staff",
+        content: "Que notícia maravilhosa, Bruno! Estamos muito contentes com o progresso do Rex. Continue com os exercícios e, se precisar, estamos à disposição!",
+        timestamp: "2025-05-11T16:30:00"
       }
     ],
-    therapyRecommendations: null,
+    therapyRecommendations: {
+      type: "Fortalecimento Muscular",
+      description: "Exercícios específicos para fortalecer a musculatura ao redor da área da prótese, incluindo caminhadas controladas e exercícios de resistência leve",
+      frequency: "5 vezes por semana",
+      duration: "15-20 minutos por sessão"
+    },
     scheduledAppointment: null
   },
   {
-    id: "ST-2023-005",
-    clientName: "Roberto Dias",
+    id: "TK2502",
+    clientName: "Fernanda Lima",
     petName: "Bella",
-    petType: "dog",
-    productId: "OB-2023-005",
-    subject: "Dúvida sobre garantia",
-    description: "Solicitando informações sobre a política de garantia",
-    status: "fechado",
-    priority: "baixa",
-    createdAt: "2023-08-22",
-    updatedAt: "2023-08-23",
-    closedAt: "2023-08-23",
+    petType: "Cachorro",
+    productId: "PT1015",
+    subject: "Manutenção da prótese",
+    description: "A prótese da Bella está apresentando algum desgaste no material de contato. Gostaria de agendar uma manutenção.",
+    status: "waiting",
+    priority: "high",
+    createdAt: "2025-04-28T13:10:00",
+    updatedAt: "2025-05-12T09:05:00",
     messages: [
       {
-        author: "Roberto Dias",
-        role: "cliente",
-        content: "Olá, gostaria de saber mais detalhes sobre a garantia da prótese. Qual é o período coberto e o que exatamente está incluído nela?",
-        timestamp: "2023-08-22T13:10:00",
-        attachments: []
+        id: "MSG012",
+        sender: "client",
+        content: "Boa tarde, notei que a parte de contato da prótese da Bella está apresentando desgaste. Precisamos de manutenção.",
+        timestamp: "2025-04-28T13:10:00"
       },
       {
-        author: "Pedro Santos",
-        role: "suporte",
-        content: "Olá Roberto, a garantia da prótese é de 6 meses a partir da data de entrega. Ela cobre defeitos de fabricação, ajustes necessários e substituição de peças. Estou anexando nossa política completa para sua consulta.",
-        timestamp: "2023-08-22T15:40:00",
-        attachments: [
-          { name: "politica-garantia.pdf", size: "0.8 MB", type: "document" }
-        ]
+        id: "MSG013",
+        sender: "staff",
+        content: "Olá Fernanda. Obrigado por nos avisar. Poderia enviar algumas fotos do desgaste para avaliarmos?",
+        timestamp: "2025-04-28T14:30:00"
       },
       {
-        author: "Roberto Dias",
-        role: "cliente",
-        content: "Perfeito, muito obrigado pela informação e pela rapidez na resposta!",
-        timestamp: "2023-08-23T09:15:00",
-        attachments: []
+        id: "MSG014",
+        sender: "client",
+        content: "Claro, seguem as fotos em anexo.",
+        timestamp: "2025-04-28T15:20:00"
+      },
+      {
+        id: "MSG015",
+        sender: "staff",
+        content: "Recebemos as fotos. Realmente precisa de manutenção. Podemos agendar para a próxima semana, teria disponibilidade na terça ou quarta-feira?",
+        timestamp: "2025-04-29T09:15:00"
+      },
+      {
+        id: "MSG016",
+        sender: "client",
+        content: "Quarta-feira seria perfeito! Qual horário?",
+        timestamp: "2025-04-29T10:40:00"
+      },
+      {
+        id: "MSG017",
+        sender: "staff",
+        content: "Ótimo! Vamos agendar para quarta, dia 05/05, às 14h. Por favor, confirme se esse horário funciona para você.",
+        timestamp: "2025-04-29T11:25:00"
+      },
+      {
+        id: "MSG018",
+        sender: "client",
+        content: "Confirmado! Estaremos lá na quarta às 14h. Obrigada!",
+        timestamp: "2025-04-29T12:10:00"
+      },
+      {
+        id: "MSG019",
+        sender: "staff",
+        content: "Fernanda, precisamos reagendar sua manutenção devido a um problema técnico no nosso equipamento. Poderia ser na sexta-feira (07/05) no mesmo horário?",
+        timestamp: "2025-05-03T16:40:00"
+      },
+      {
+        id: "MSG020",
+        sender: "client",
+        content: "Sem problemas, sexta às 14h está confirmado!",
+        timestamp: "2025-05-03T17:55:00"
       }
     ],
-    therapyRecommendations: null,
-    scheduledAppointment: null
+    therapyRecommendations: {
+      type: "Adaptação Contínua",
+      description: "Manter os exercícios regulares enquanto aguarda a manutenção da prótese",
+      frequency: "Diário",
+      duration: "15 minutos por sessão"
+    },
+    scheduledAppointment: {
+      date: "2025-05-07",
+      time: "14:00",
+      practitioner: "Técnico Carlos Oliveira",
+      location: "Unidade Central",
+      notes: "Traga a prótese e o pet para ajustes finais"
+    }
+  },
+  {
+    id: "TK2501",
+    clientName: "Gustavo Mendes",
+    petName: "Toddy",
+    petType: "Cachorro",
+    productId: "PT1010",
+    subject: "Consulta de acompanhamento",
+    description: "Toddy está usando a prótese há 2 meses. Gostaríamos de agendar uma consulta de rotina para verificar se está tudo bem.",
+    status: "closed",
+    priority: "low",
+    createdAt: "2025-04-15T10:30:00",
+    updatedAt: "2025-04-25T16:45:00",
+    closedAt: "2025-04-25T16:45:00",
+    messages: [
+      {
+        id: "MSG021",
+        sender: "client",
+        content: "Olá, gostaria de agendar uma consulta de rotina para o Toddy. Ele está usando a prótese há 2 meses já.",
+        timestamp: "2025-04-15T10:30:00"
+      },
+      {
+        id: "MSG022",
+        sender: "staff",
+        content: "Bom dia Gustavo! Podemos agendar para a próxima semana. Quais dias seriam melhores para você?",
+        timestamp: "2025-04-15T11:45:00"
+      },
+      {
+        id: "MSG023",
+        sender: "client",
+        content: "Segunda ou terça seria ideal, de preferência pela manhã.",
+        timestamp: "2025-04-15T13:20:00"
+      },
+      {
+        id: "MSG024",
+        sender: "staff",
+        content: "Perfeito! Temos disponibilidade na terça, dia 21/04, às 10h. Funciona para você?",
+        timestamp: "2025-04-15T14:50:00"
+      },
+      {
+        id: "MSG025",
+        sender: "client",
+        content: "Sim, está ótimo! Confirmo para terça às 10h.",
+        timestamp: "2025-04-15T15:30:00"
+      },
+      {
+        id: "MSG026",
+        sender: "staff",
+        content: "Ótimo! Agendamento confirmado. Até terça-feira!",
+        timestamp: "2025-04-15T16:15:00"
+      },
+      {
+        id: "MSG027",
+        sender: "staff",
+        content: "Gustavo, obrigado pela visita hoje. Como conversamos, o Toddy está se adaptando muito bem à prótese. Continue com os exercícios recomendados e volte daqui a 3 meses para nova avaliação, ou antes se notar qualquer problema.",
+        timestamp: "2025-04-21T12:30:00"
+      },
+      {
+        id: "MSG028",
+        sender: "client",
+        content: "Muito obrigado pelo atendimento! Estou muito satisfeito com os resultados. Seguiremos as recomendações e retornaremos para acompanhamento.",
+        timestamp: "2025-04-21T18:45:00"
+      }
+    ],
+    therapyRecommendations: {
+      type: "Manutenção",
+      description: "Exercícios de manutenção para garantir a adaptação contínua e o fortalecimento muscular",
+      frequency: "3 vezes por semana",
+      duration: "20 minutos por sessão"
+    },
+    scheduledAppointment: {
+      date: "2025-07-21",
+      time: "10:00",
+      practitioner: "Dr. Ricardo Sousa",
+      location: "Unidade Central",
+      notes: "Consulta de acompanhamento trimestral"
+    }
   }
 ];
-
-// Sample knowledge base articles
-const KNOWLEDGE_BASE_ARTICLES = [
-  {
-    id: 1,
-    title: "Como ajudar seu pet a se adaptar a uma prótese",
-    category: "Adaptação",
-    excerpt: "Guia completo para facilitar a adaptação de cães e gatos a novas próteses.",
-    readingTime: "5 min",
-    createdAt: "2023-08-10"
-  },
-  {
-    id: 2,
-    title: "Cuidados diários com próteses para pets",
-    category: "Manutenção",
-    excerpt: "Aprenda como cuidar e manter a prótese do seu pet em perfeito estado.",
-    readingTime: "4 min",
-    createdAt: "2023-08-15"
-  },
-  {
-    id: 3,
-    title: "Exercícios recomendados para reabilitação",
-    category: "Fisioterapia",
-    excerpt: "Série de exercícios que ajudam na recuperação e adaptação de pets com próteses.",
-    readingTime: "7 min",
-    createdAt: "2023-08-20"
-  },
-  {
-    id: 4,
-    title: "Sinais de problemas em próteses: quando buscar ajuda",
-    category: "Saúde",
-    excerpt: "Aprenda a identificar sinais de que a prótese pode estar causando desconforto ou problemas.",
-    readingTime: "3 min",
-    createdAt: "2023-08-25"
-  },
-  {
-    id: 5,
-    title: "Perguntas frequentes sobre garantia e suporte",
-    category: "Suporte",
-    excerpt: "Respostas para as dúvidas mais comuns sobre nossos serviços de suporte e políticas de garantia.",
-    readingTime: "6 min",
-    createdAt: "2023-08-30"
-  }
-];
-
-// Sample therapy partners
-const THERAPY_PARTNERS = [
-  {
-    id: 1,
-    name: "Clínica PetFisio",
-    specialty: "Fisioterapia e Reabilitação",
-    address: "Av. Paulista, 1200, São Paulo - SP",
-    phone: "(11) 3456-7890",
-    email: "contato@petfisio.com.br",
-    rating: 4.8,
-    services: ["Hidroterapia", "Laserterapia", "Eletroestimulação", "Acupuntura"]
-  },
-  {
-    id: 2,
-    name: "Centro de Reabilitação Animal",
-    specialty: "Reabilitação Neurológica e Ortopédica",
-    address: "Rua das Flores, 300, Rio de Janeiro - RJ",
-    phone: "(21) 2345-6789",
-    email: "contato@reabilitacaoanimal.com.br",
-    rating: 4.7,
-    services: ["Fisioterapia", "Hidroterapia", "Terapia de Fortalecimento"]
-  },
-  {
-    id: 3,
-    name: "PetReab",
-    specialty: "Reabilitação Pós-Cirúrgica",
-    address: "Av. do Contorno, 500, Belo Horizonte - MG",
-    phone: "(31) 3456-7890",
-    email: "contato@petreab.com.br",
-    rating: 4.5,
-    services: ["Fisioterapia", "Terapia Ocupacional", "Hidroterapia"]
-  },
-  {
-    id: 4,
-    name: "Fisiovet",
-    specialty: "Fisioterapia Animal",
-    address: "Rua Dr. Neto, 123, Curitiba - PR",
-    phone: "(41) 3456-7890",
-    email: "contato@fisiovet.com.br",
-    rating: 4.9,
-    services: ["Fisioterapia", "Laserterapia", "Acupuntura", "Massoterapia"]
-  }
-];
-
-type TicketStatus = 'aberto' | 'em_andamento' | 'fechado' | 'resolvido';
-type TicketPriority = 'baixa' | 'normal' | 'alta';
 
 const Support = () => {
-  const [tickets, setTickets] = useState(SAMPLE_TICKETS);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState<TicketStatus | "all">("all");
-  const [selectedTicket, setSelectedTicket] = useState(tickets[0]);
+  const [tickets, setTickets] = useState<SupportTicket[]>(sampleTickets);
+  const [activeTicket, setActiveTicket] = useState<SupportTicket | null>(null);
+  const [activeTab, setActiveTab] = useState("all");
   const [newMessage, setNewMessage] = useState("");
-  const [createTicketDialogOpen, setCreateTicketDialogOpen] = useState(false);
-  const [newTicket, setNewTicket] = useState({
-    clientName: "",
-    petName: "",
-    petType: "dog",
-    productId: "",
-    subject: "",
-    description: "",
-    priority: "normal" as TicketPriority
-  });
-  const [scheduleDialogOpen, setScheduleDialogOpen] = useState(false);
-  const [newAppointment, setNewAppointment] = useState({
-    date: "",
-    time: "",
-    with: "",
-    location: "",
-    type: "fisioterapia"
-  });
-  const [therapyRecommendationDialogOpen, setTherapyRecommendationDialogOpen] = useState(false);
-  const [newTherapyRecommendation, setNewTherapyRecommendation] = useState({
-    recommendedBy: "",
-    recommendation: ""
-  });
-
-  const filteredTickets = tickets.filter(ticket => 
-    (statusFilter === "all" || ticket.status === statusFilter) &&
-    (
-      ticket.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ticket.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ticket.petName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      ticket.subject.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  );
-
-  const handleTicketSelect = (ticket: any) => {
-    setSelectedTicket(ticket);
-  };
-
-  const handleSendMessage = () => {
-    if (!newMessage.trim()) {
-      toast.error("A mensagem não pode estar vazia.");
-      return;
+  
+  const getStatusColor = (status: TicketStatus) => {
+    switch (status) {
+      case "open":
+        return "bg-amber-500";
+      case "in_progress":
+        return "bg-ocean-500";
+      case "waiting":
+        return "bg-purple-500";
+      case "resolved":
+        return "bg-green-500";
+      case "closed":
+        return "bg-gray-500";
+      default:
+        return "bg-gray-500";
     }
-
-    const newMessageObj = {
-      author: "Você",
-      role: "suporte",
+  };
+  
+  const getStatusBadge = (status: TicketStatus) => {
+    switch (status) {
+      case "open":
+        return <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800">Aberto</Badge>;
+      case "in_progress":
+        return <Badge variant="outline" className="bg-ocean-100 text-ocean-800 border-ocean-200 dark:bg-ocean-900/30 dark:text-ocean-400 dark:border-ocean-800">Em Andamento</Badge>;
+      case "waiting":
+        return <Badge variant="outline" className="bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/30 dark:text-purple-400 dark:border-purple-800">Aguardando</Badge>;
+      case "resolved":
+        return <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800">Resolvido</Badge>;
+      case "closed":
+        return <Badge variant="outline" className="bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-800">Fechado</Badge>;
+      default:
+        return <Badge variant="outline">Desconhecido</Badge>;
+    }
+  };
+  
+  const getPriorityBadge = (priority: TicketPriority) => {
+    switch (priority) {
+      case "low":
+        return <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800">Baixa</Badge>;
+      case "medium":
+        return <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800">Média</Badge>;
+      case "high":
+        return <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800">Alta</Badge>;
+      case "urgent":
+        return <Badge variant="outline" className="bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800">Urgente</Badge>;
+      default:
+        return <Badge variant="outline">Desconhecido</Badge>;
+    }
+  };
+  
+  const handleViewTicket = (ticket: SupportTicket) => {
+    setActiveTicket(ticket);
+  };
+  
+  const handleSendMessage = () => {
+    if (!activeTicket || !newMessage.trim()) return;
+    
+    const now = new Date().toISOString();
+    const newMsg: Message = {
+      id: `MSG${Math.floor(Math.random() * 10000)}`,
+      sender: "staff",
       content: newMessage,
-      timestamp: new Date().toISOString(),
-      attachments: []
+      timestamp: now
     };
-
+    
     const updatedTicket = {
-      ...selectedTicket,
-      messages: [...selectedTicket.messages, newMessageObj],
-      status: selectedTicket.status === "aberto" ? "em_andamento" : selectedTicket.status,
-      updatedAt: new Date().toISOString().split('T')[0]
+      ...activeTicket,
+      messages: [...activeTicket.messages, newMsg],
+      updatedAt: now
     };
-
-    const updatedTickets = tickets.map(ticket => 
-      ticket.id === selectedTicket.id ? updatedTicket : ticket
+    
+    const updatedTickets = tickets.map(t => 
+      t.id === activeTicket.id ? updatedTicket : t
     );
-
+    
+    setActiveTicket(updatedTicket);
     setTickets(updatedTickets);
-    setSelectedTicket(updatedTicket);
     setNewMessage("");
     toast.success("Mensagem enviada com sucesso!");
   };
-
-  const handleCreateTicket = () => {
-    if (!newTicket.clientName || !newTicket.subject || !newTicket.description) {
-      toast.error("Por favor, preencha todos os campos obrigatórios.");
-      return;
+  
+  const handleUpdateStatus = (newStatus: TicketStatus) => {
+    if (!activeTicket) return;
+    
+    const now = new Date().toISOString();
+    const statusMap: Record<TicketStatus, string> = {
+      "open": "aberto",
+      "in_progress": "em andamento",
+      "waiting": "aguardando",
+      "resolved": "resolvido",
+      "closed": "fechado"
+    };
+    
+    let updatedTicket = {
+      ...activeTicket,
+      status: newStatus,
+      updatedAt: now
+    };
+    
+    if (newStatus === "closed") {
+      updatedTicket = {
+        ...updatedTicket,
+        closedAt: now
+      };
     }
-
-    const currentDate = new Date().toISOString().split('T')[0];
-    const newTicketObj = {
-      id: `ST-2023-${tickets.length + 1}`.padStart(11, '0'),
-      ...newTicket,
-      status: "aberto" as TicketStatus,
-      createdAt: currentDate,
-      updatedAt: currentDate,
-      messages: [
-        {
-          author: newTicket.clientName,
-          role: "cliente",
-          content: newTicket.description,
-          timestamp: new Date().toISOString(),
-          attachments: []
-        }
-      ],
-      therapyRecommendations: null,
-      scheduledAppointment: null
-    };
-
-    setTickets([...tickets, newTicketObj]);
-    setCreateTicketDialogOpen(false);
-    setNewTicket({
-      clientName: "",
-      petName: "",
-      petType: "dog",
-      productId: "",
-      subject: "",
-      description: "",
-      priority: "normal"
-    });
-    toast.success("Ticket criado com sucesso!");
-  };
-
-  const handleChangeTicketStatus = (status: TicketStatus) => {
-    const updatedTicket = {
-      ...selectedTicket,
-      status,
-      updatedAt: new Date().toISOString().split('T')[0],
-      ...(status === "fechado" ? { closedAt: new Date().toISOString().split('T')[0] } : {})
-    };
-
-    const updatedTickets = tickets.map(ticket => 
-      ticket.id === selectedTicket.id ? updatedTicket : ticket
-    );
-
+    
+    const updatedTickets = tickets.map(t => 
+      t.id === activeTicket.id ? updatedTicket : t
+    ) as SupportTicket[];
+    
+    setActiveTicket(updatedTicket as SupportTicket);
     setTickets(updatedTickets);
-    setSelectedTicket(updatedTicket);
-    toast.success(`Status do ticket atualizado para ${getStatusLabel(status)}`);
+    toast.success(`Status atualizado para ${statusMap[newStatus]}`);
   };
 
-  const handleAddAppointment = () => {
-    if (!newAppointment.date || !newAppointment.time || !newAppointment.with) {
-      toast.error("Por favor, preencha todos os campos obrigatórios.");
-      return;
-    }
-
-    const updatedTicket = {
-      ...selectedTicket,
-      scheduledAppointment: newAppointment,
-      updatedAt: new Date().toISOString().split('T')[0],
-      messages: [
-        ...selectedTicket.messages,
-        {
-          author: "Sistema",
-          role: "sistema",
-          content: `Agendamento marcado: ${newAppointment.type} com ${newAppointment.with} no dia ${formatDate(newAppointment.date)} às ${newAppointment.time} em ${newAppointment.location || "Local a definir"}.`,
-          timestamp: new Date().toISOString(),
-          attachments: []
-        }
-      ]
-    };
-
-    const updatedTickets = tickets.map(ticket => 
-      ticket.id === selectedTicket.id ? updatedTicket : ticket
-    );
-
-    setTickets(updatedTickets);
-    setSelectedTicket(updatedTicket);
-    setScheduleDialogOpen(false);
-    setNewAppointment({
-      date: "",
-      time: "",
-      with: "",
-      location: "",
-      type: "fisioterapia"
-    });
-    toast.success("Agendamento adicionado com sucesso!");
-  };
-
-  const handleAddTherapyRecommendation = () => {
-    if (!newTherapyRecommendation.recommendedBy || !newTherapyRecommendation.recommendation) {
-      toast.error("Por favor, preencha todos os campos obrigatórios.");
-      return;
-    }
-
-    const updatedTicket = {
-      ...selectedTicket,
-      therapyRecommendations: {
-        ...newTherapyRecommendation,
-        date: new Date().toISOString().split('T')[0]
-      },
-      updatedAt: new Date().toISOString().split('T')[0],
-      messages: [
-        ...selectedTicket.messages,
-        {
-          author: "Sistema",
-          role: "sistema",
-          content: `Nova recomendação de terapia por ${newTherapyRecommendation.recommendedBy}: ${newTherapyRecommendation.recommendation}`,
-          timestamp: new Date().toISOString(),
-          attachments: []
-        }
-      ]
-    };
-
-    const updatedTickets = tickets.map(ticket => 
-      ticket.id === selectedTicket.id ? updatedTicket : ticket
-    );
-
-    setTickets(updatedTickets);
-    setSelectedTicket(updatedTicket);
-    setTherapyRecommendationDialogOpen(false);
-    setNewTherapyRecommendation({
-      recommendedBy: "",
-      recommendation: ""
-    });
-    toast.success("Recomendação de terapia adicionada com sucesso!");
-  };
+  const filteredTickets = activeTab === "all" 
+    ? tickets 
+    : tickets.filter(t => t.status === activeTab);
 
   return (
     <Layout>
-      <div className="space-y-6 animate-fade-in">
+      <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Suporte ao Cliente</h1>
           <p className="text-muted-foreground">
-            Gerencie tickets de suporte, recomendações de fisioterapia e acompanhamento pós-produção.
+            Gerenciar chamados de suporte, fisioterapia e acompanhamento de pacientes.
           </p>
         </div>
 
-        <Tabs defaultValue="tickets">
-          <TabsList className="w-full border-b mb-4 pb-0">
-            <TabsTrigger value="tickets" className="flex-1">
-              <MessageSquare className="h-4 w-4 mr-2" />
-              Tickets de Suporte
-            </TabsTrigger>
-            <TabsTrigger value="knowledge" className="flex-1">
-              <FileText className="h-4 w-4 mr-2" />
-              Base de Conhecimento
-            </TabsTrigger>
-            <TabsTrigger value="therapy" className="flex-1">
-              <HeartHandshake className="h-4 w-4 mr-2" />
-              Parceiros de Fisioterapia
-            </TabsTrigger>
-          </TabsList>
+        <Tabs defaultValue="all" value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <div className="flex justify-between items-center mb-4">
+            <TabsList>
+              <TabsTrigger value="open" className="flex items-center gap-2">
+                <AlertCircle className="h-4 w-4" />
+                <span>Abertos</span>
+              </TabsTrigger>
+              <TabsTrigger value="in_progress" className="flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                <span>Em Andamento</span>
+              </TabsTrigger>
+              <TabsTrigger value="waiting" className="flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                <span>Aguardando</span>
+              </TabsTrigger>
+              <TabsTrigger value="resolved" className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4" />
+                <span>Resolvidos</span>
+              </TabsTrigger>
+              <TabsTrigger value="closed" className="flex items-center gap-2">
+                <XCircle className="h-4 w-4" />
+                <span>Fechados</span>
+              </TabsTrigger>
+              <TabsTrigger value="all" className="flex items-center gap-2">
+                <span>Todos</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-          {/* Tickets Tab */}
-          <TabsContent value="tickets" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Ticket List */}
-              <Card className="lg:col-span-1">
-                <CardHeader className="space-y-4 pb-3">
-                  <div className="flex justify-between items-center">
-                    <CardTitle>Tickets</CardTitle>
-                    <Button 
-                      onClick={() => setCreateTicketDialogOpen(true)} 
-                      className="bg-ocean-600 hover:bg-ocean-700"
-                    >
-                      <Plus className="h-4 w-4 mr-1" />
-                      Novo
-                    </Button>
-                  </div>
-                  <div className="flex flex-col space-y-3">
-                    <div className="relative">
-                      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        type="search"
-                        placeholder="Buscar ticket..."
-                        className="pl-8"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                      />
-                    </div>
-                    <div className="flex space-x-2 overflow-x-auto pb-1 scrollbar-none">
-                      <Button
-                        variant={statusFilter === "all" ? "default" : "outline"}
-                        size="sm"
-                        className={statusFilter === "all" ? "bg-ocean-600 hover:bg-ocean-700" : ""}
-                        onClick={() => setStatusFilter("all")}
-                      >
-                        Todos
-                      </Button>
-                      <Button
-                        variant={statusFilter === "aberto" ? "default" : "outline"}
-                        size="sm"
-                        className={statusFilter === "aberto" ? "bg-amber-600 hover:bg-amber-700" : ""}
-                        onClick={() => setStatusFilter("aberto")}
-                      >
-                        Abertos
-                      </Button>
-                      <Button
-                        variant={statusFilter === "em_andamento" ? "default" : "outline"}
-                        size="sm"
-                        className={statusFilter === "em_andamento" ? "bg-purple-600 hover:bg-purple-700" : ""}
-                        onClick={() => setStatusFilter("em_andamento")}
-                      >
-                        Em Andamento
-                      </Button>
-                      <Button
-                        variant={statusFilter === "fechado" ? "default" : "outline"}
-                        size="sm"
-                        className={statusFilter === "fechado" ? "bg-green-600 hover:bg-green-700" : ""}
-                        onClick={() => setStatusFilter("fechado")}
-                      >
-                        Resolvidos
-                      </Button>
-                    </div>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-2 max-h-[600px] overflow-y-auto pr-1">
-                    {filteredTickets.length === 0 ? (
-                      <div className="text-center py-8 text-muted-foreground">
-                        <MessageSquare className="mx-auto h-12 w-12 opacity-20 mb-2" />
-                        <p>Nenhum ticket encontrado</p>
-                      </div>
-                    ) : (
-                      filteredTickets.map((ticket) => (
-                        <div
-                          key={ticket.id}
-                          className={`p-3 rounded-lg cursor-pointer transition-all border ${
-                            selectedTicket?.id === ticket.id
-                              ? "border-primary bg-primary/5"
-                              : "hover:border-ocean-300 dark:hover:border-ocean-700"
-                          }`}
-                          onClick={() => handleTicketSelect(ticket)}
-                        >
-                          <div className="flex items-start justify-between">
-                            <div className="flex items-center space-x-3">
-                              {ticket.petType === "dog" ? (
-                                <Dog className="h-5 w-5 text-ocean-600 dark:text-ocean-400" />
-                              ) : (
-                                <Cat className="h-5 w-5 text-ocean-600 dark:text-ocean-400" />
-                              )}
-                              <div>
-                                <div className="font-medium">{ticket.subject}</div>
-                                <div className="text-sm text-muted-foreground">
-                                  {ticket.clientName} - {ticket.petName}
-                                </div>
-                              </div>
-                            </div>
-                            <TicketStatusBadge status={ticket.status as TicketStatus} />
-                          </div>
-                          <div className="mt-2 flex items-center justify-between text-xs text-muted-foreground">
-                            <div className="flex items-center">
-                              <Calendar className="h-3 w-3 mr-1" />
-                              {formatDate(ticket.createdAt)}
-                            </div>
-                            <div className="flex items-center">
-                              <MessageSquare className="h-3 w-3 mr-1" />
-                              {ticket.messages.length} mensagens
-                            </div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="col-span-1 overflow-auto max-h-[70vh]">
+              <h2 className="font-semibold mb-3">Chamados ({filteredTickets.length})</h2>
+              <div className="space-y-3">
+                {filteredTickets.map((ticket) => (
+                  <Card 
+                    key={ticket.id} 
+                    className={`hover:shadow-md transition-shadow cursor-pointer ${activeTicket?.id === ticket.id ? 'border-primary' : ''}`}
+                    onClick={() => handleViewTicket(ticket)}
+                  >
+                    <CardContent className="p-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-semibold">{ticket.subject}</h3>
+                          <p className="text-sm text-muted-foreground">
+                            {ticket.clientName} • {ticket.petName}
+                          </p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-xs">{ticket.productId}</span>
                           </div>
                         </div>
-                      ))
-                    )}
+                        <div className="flex flex-col items-end">
+                          <div className="mb-1">{getStatusBadge(ticket.status)}</div>
+                          <div className="mb-1">{getPriorityBadge(ticket.priority)}</div>
+                          <p className="text-xs text-muted-foreground">
+                            {new Date(ticket.createdAt).toLocaleDateString('pt-BR')}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+                
+                {filteredTickets.length === 0 && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <p>Nenhum chamado encontrado nesta categoria.</p>
                   </div>
-                </CardContent>
-              </Card>
+                )}
+              </div>
+            </div>
 
-              {/* Ticket Details */}
-              <Card className="lg:col-span-2">
-                <CardHeader className="pb-3">
-                  <CardTitle>
-                    {selectedTicket ? (
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center space-x-2">
-                          <span>
-                            {selectedTicket.subject}
-                          </span>
-                          <TicketStatusBadge status={selectedTicket.status as TicketStatus} />
-                          <PriorityBadge priority={selectedTicket.priority as TicketPriority} />
-                        </div>
-                        {selectedTicket.status !== "fechado" && (
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="outline" size="sm">
-                                Ações <ChevronRight className="h-4 w-4 ml-1" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuLabel>Gerenciar Ticket</DropdownMenuLabel>
-                              <DropdownMenuSeparator />
-                              {selectedTicket.status === "aberto" && (
-                                <DropdownMenuItem onClick={() => handleChangeTicketStatus("em_andamento")}>
-                                  <Clock className="h-4 w-4 mr-2" />
-                                  Marcar em Progresso
-                                </DropdownMenuItem>
-                              )}
-                              {selectedTicket.status !== "fechado" && (
-                                <DropdownMenuItem onClick={() => handleChangeTicketStatus("fechado")}>
-                                  <Check className="h-4 w-4 mr-2" />
-                                  Marcar como Resolvido
-                                </DropdownMenuItem>
-                              )}
-                              <DropdownMenuItem onClick={() => setTherapyRecommendationDialogOpen(true)}>
-                                <ClipboardList className="h-4 w-4 mr-2" />
-                                Adicionar Recomendação
-                              </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => setScheduleDialogOpen(true)}>
-                                <Map className="h-4 w-4 mr-2" />
-                                Agendar Consulta
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        )}
+            <div className="col-span-1 lg:col-span-2">
+              {activeTicket ? (
+                <Card className="h-full overflow-hidden flex flex-col">
+                  <CardHeader className="pb-3">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle>{activeTicket.subject}</CardTitle>
+                        <CardDescription>
+                          Ticket #{activeTicket.id} • Criado em {new Date(activeTicket.createdAt).toLocaleDateString('pt-BR')}
+                        </CardDescription>
                       </div>
-                    ) : (
-                      "Selecione um ticket"
-                    )}
-                  </CardTitle>
-                  {selectedTicket && (
-                    <CardDescription>
-                      ID: {selectedTicket.id} | Cliente: {selectedTicket.clientName} | Pet: {selectedTicket.petName}
-                    </CardDescription>
-                  )}
-                </CardHeader>
-                <CardContent>
-                  {!selectedTicket ? (
-                    <div className="text-center py-12 text-muted-foreground">
-                      <AlertCircle className="mx-auto h-16 w-16 opacity-20 mb-4" />
-                      <p className="text-lg">Selecione um ticket para ver os detalhes</p>
+                      <div className="flex flex-col items-end gap-1">
+                        {getStatusBadge(activeTicket.status)}
+                        {getPriorityBadge(activeTicket.priority)}
+                      </div>
                     </div>
-                  ) : (
-                    <div className="space-y-6">
-                      {/* Information Cards */}
-                      {(selectedTicket.therapyRecommendations || selectedTicket.scheduledAppointment) && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                          {selectedTicket.therapyRecommendations && (
-                            <Card className="border-purple-300 bg-purple-50 dark:bg-purple-900/10">
-                              <CardContent className="p-4">
-                                <div className="flex items-start space-x-3">
-                                  <ClipboardCheck className="h-5 w-5 text-purple-600 shrink-0 mt-0.5" />
-                                  <div>
-                                    <h4 className="text-sm font-medium text-purple-900 dark:text-purple-300">Recomendação de Terapia</h4>
-                                    <p className="text-xs text-purple-800 dark:text-purple-400 mt-1">
-                                      Por: {selectedTicket.therapyRecommendations.recommendedBy}
-                                    </p>
-                                    <p className="text-xs text-purple-800 dark:text-purple-400 mt-1">
-                                      {selectedTicket.therapyRecommendations.recommendation}
-                                    </p>
-                                    <p className="text-xs text-purple-700/70 dark:text-purple-400/70 mt-2">
-                                      Adicionado em {formatDate(selectedTicket.therapyRecommendations.date)}
-                                    </p>
-                                  </div>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          )}
-                          
-                          {selectedTicket.scheduledAppointment && (
-                            <Card className="border-green-300 bg-green-50 dark:bg-green-900/10">
-                              <CardContent className="p-4">
-                                <div className="flex items-start space-x-3">
-                                  <Calendar className="h-5 w-5 text-green-600 shrink-0 mt-0.5" />
-                                  <div>
-                                    <h4 className="text-sm font-medium text-green-900 dark:text-green-300">Agendamento</h4>
-                                    <p className="text-xs text-green-800 dark:text-green-400 mt-1">
-                                      {selectedTicket.scheduledAppointment.type.charAt(0).toUpperCase() + selectedTicket.scheduledAppointment.type.slice(1)} com {selectedTicket.scheduledAppointment.with}
-                                    </p>
-                                    <p className="text-xs text-green-800 dark:text-green-400 mt-1">
-                                      Data: {formatDate(selectedTicket.scheduledAppointment.date)} às {selectedTicket.scheduledAppointment.time}
-                                    </p>
-                                    <p className="text-xs text-green-800 dark:text-green-400 mt-1">
-                                      Local: {selectedTicket.scheduledAppointment.location}
-                                    </p>
-                                  </div>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          )}
-                        </div>
-                      )}
-                      
-                      {/* Messages */}
-                      <div className="space-y-4 max-h-[400px] overflow-y-auto pr-1">
-                        {selectedTicket.messages.map((message, index) => (
-                          <div 
-                            key={index} 
-                            className={`p-4 rounded-lg ${
-                              message.role === "cliente" 
-                                ? "bg-muted/50 border"
-                                : message.role === "sistema"
-                                ? "bg-ocean-50 dark:bg-ocean-900/10 border-ocean-200 dark:border-ocean-800 border"
-                                : "bg-primary/5 border-primary/20 border"
-                            }`}
-                          >
-                            <div className="flex justify-between items-start mb-2">
-                              <div className="flex items-center">
-                                <span className="font-medium">{message.author}</span>
-                                <Badge 
-                                  variant="outline" 
-                                  className={`ml-2 text-xs ${
-                                    message.role === "cliente"
-                                      ? "bg-amber-100 text-amber-800 hover:bg-amber-100 border-amber-300"
-                                      : message.role === "sistema"
-                                      ? "bg-ocean-100 text-ocean-800 hover:bg-ocean-100 border-ocean-300"
-                                      : "bg-purple-100 text-purple-800 hover:bg-purple-100 border-purple-300"
-                                  }`}
-                                >
-                                  {message.role.charAt(0).toUpperCase() + message.role.slice(1)}
-                                </Badge>
-                              </div>
-                              <div className="text-xs text-muted-foreground">
-                                {formatDateTime(message.timestamp)}
-                              </div>
-                            </div>
-                            <p className="text-sm whitespace-pre-line">
-                              {message.content}
-                            </p>
-                            {message.attachments.length > 0 && (
-                              <div className="mt-3 space-y-2">
-                                <div className="text-xs font-medium text-muted-foreground">Anexos:</div>
-                                <div className="flex flex-wrap gap-2">
-                                  {message.attachments.map((attachment, idx) => (
-                                    <div 
-                                      key={idx}
-                                      className="flex items-center space-x-2 bg-background border rounded-md px-3 py-1.5 text-xs"
-                                    >
-                                      <Paperclip className="h-3 w-3 text-muted-foreground" />
-                                      <span>{attachment.name}</span>
-                                      <Badge variant="outline" className="ml-1 text-[10px] px-1">
-                                        {attachment.size}
-                                      </Badge>
-                                    </div>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                      
-                      {/* Reply Box */}
-                      {selectedTicket.status !== "fechado" && (
-                        <div className="space-y-3 pt-3 border-t">
-                          <div className="flex items-center justify-between">
-                            <Label htmlFor="reply" className="text-sm font-medium">
-                              Responder
-                            </Label>
-                            <div className="flex space-x-1">
-                              <Button variant="outline" size="sm" className="h-7 px-2">
-                                <Paperclip className="h-3.5 w-3.5" />
-                              </Button>
-                              <Button variant="outline" size="sm" className="h-7 px-2">
-                                <Video className="h-3.5 w-3.5" />
-                              </Button>
-                            </div>
-                          </div>
-                          <Textarea
-                            id="reply"
-                            placeholder="Digite sua resposta..."
-                            className="min-h-[100px]"
-                            value={newMessage}
-                            onChange={(e) => setNewMessage(e.target.value)}
-                          />
-                          <div className="flex justify-end">
+
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" className="h-8" size="sm">
+                            <Tag className="h-3.5 w-3.5 mr-1" />
+                            Mudar Status
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Atualizar Status</DialogTitle>
+                            <DialogDescription>
+                              Selecione o novo status para este chamado
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="grid grid-cols-2 gap-3 py-4">
                             <Button 
-                              onClick={handleSendMessage}
-                              className="bg-ocean-600 hover:bg-ocean-700"
+                              variant="outline" 
+                              className="flex-col h-auto py-3 justify-start items-start"
+                              onClick={() => {
+                                handleUpdateStatus("open");
+                                document.dispatchEvent(new CustomEvent('close-dialog'));
+                              }}
                             >
-                              <Send className="h-4 w-4 mr-2" />
-                              Enviar
+                              <AlertCircle className="h-4 w-4 mb-1" />
+                              <span className="font-medium">Aberto</span>
+                              <span className="text-xs text-muted-foreground">Novo chamado</span>
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              className="flex-col h-auto py-3 justify-start items-start"
+                              onClick={() => {
+                                handleUpdateStatus("in_progress");
+                                document.dispatchEvent(new CustomEvent('close-dialog'));
+                              }}
+                            >
+                              <Clock className="h-4 w-4 mb-1" />
+                              <span className="font-medium">Em Andamento</span>
+                              <span className="text-xs text-muted-foreground">Atendimento iniciado</span>
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              className="flex-col h-auto py-3 justify-start items-start"
+                              onClick={() => {
+                                handleUpdateStatus("waiting");
+                                document.dispatchEvent(new CustomEvent('close-dialog'));
+                              }}
+                            >
+                              <RefreshCw className="h-4 w-4 mb-1" />
+                              <span className="font-medium">Aguardando</span>
+                              <span className="text-xs text-muted-foreground">Esperando cliente/agendamento</span>
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              className="flex-col h-auto py-3 justify-start items-start"
+                              onClick={() => {
+                                handleUpdateStatus("resolved");
+                                document.dispatchEvent(new CustomEvent('close-dialog'));
+                              }}
+                            >
+                              <CheckCircle2 className="h-4 w-4 mb-1" />
+                              <span className="font-medium">Resolvido</span>
+                              <span className="text-xs text-muted-foreground">Problema solucionado</span>
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              className="flex-col h-auto py-3 justify-start items-start col-span-2"
+                              onClick={() => {
+                                handleUpdateStatus("closed");
+                                document.dispatchEvent(new CustomEvent('close-dialog'));
+                              }}
+                            >
+                              <XCircle className="h-4 w-4 mb-1" />
+                              <span className="font-medium">Fechado</span>
+                              <span className="text-xs text-muted-foreground">Encerrar definitivamente</span>
                             </Button>
                           </div>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
+                          <DialogFooter>
+                            <Button variant="outline" onClick={() => document.dispatchEvent(new CustomEvent('close-dialog'))}>
+                              Cancelar
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
 
-          {/* Knowledge Base Tab */}
-          <TabsContent value="knowledge" className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <Card className="lg:col-span-3">
-                <CardHeader className="pb-3">
-                  <div className="flex justify-between items-center">
-                    <CardTitle>Base de Conhecimento</CardTitle>
-                    <div className="relative w-full max-w-sm">
-                      <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                      <Input
-                        type="search"
-                        placeholder="Buscar artigos..."
-                        className="pl-8"
-                      />
+                      <Button variant="outline" className="h-8" size="sm">
+                        <Phone className="h-3.5 w-3.5 mr-1" />
+                        Ligar para Cliente
+                      </Button>
+
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" className="h-8" size="sm">
+                            <Calendar className="h-3.5 w-3.5 mr-1" />
+                            Agendar Consulta
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Agendar Consulta</DialogTitle>
+                            <DialogDescription>
+                              Agende uma consulta para o paciente {activeTicket.petName}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="grid gap-4 py-4">
+                            {/* Simplified form fields */}
+                            <div className="flex flex-col gap-1">
+                              <label htmlFor="date" className="text-sm font-medium">Data</label>
+                              <input 
+                                id="date" 
+                                type="date" 
+                                className="border rounded-md px-3 py-2"
+                              />
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              <label htmlFor="time" className="text-sm font-medium">Horário</label>
+                              <input 
+                                id="time" 
+                                type="time" 
+                                className="border rounded-md px-3 py-2"
+                              />
+                            </div>
+                            <div className="flex flex-col gap-1">
+                              <label htmlFor="type" className="text-sm font-medium">Tipo de Consulta</label>
+                              <select 
+                                id="type" 
+                                className="border rounded-md px-3 py-2"
+                              >
+                                <option value="ajuste">Ajuste de Prótese</option>
+                                <option value="fisioterapia">Fisioterapia</option>
+                                <option value="acompanhamento">Acompanhamento</option>
+                                <option value="avaliacao">Avaliação</option>
+                              </select>
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button type="submit" onClick={() => {
+                              toast.success("Consulta agendada com sucesso!");
+                              document.dispatchEvent(new CustomEvent('close-dialog'));
+                            }}>
+                              Agendar
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                      
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" className="h-8" size="sm">
+                            <Map className="h-3.5 w-3.5 mr-1" />
+                            Fisioterapia
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>Recomendações de Fisioterapia</DialogTitle>
+                            <DialogDescription>
+                              Visualize e atualize as recomendações de fisioterapia para {activeTicket.petName}
+                            </DialogDescription>
+                          </DialogHeader>
+                          <div className="py-4">
+                            <div className="mb-4 bg-muted p-3 rounded-md">
+                              <h3 className="text-sm font-medium mb-2">Recomendações Atuais</h3>
+                              <div className="space-y-2 text-sm">
+                                <p><span className="font-medium">Tipo:</span> {activeTicket.therapyRecommendations.type}</p>
+                                <p><span className="font-medium">Descrição:</span> {activeTicket.therapyRecommendations.description}</p>
+                                <p><span className="font-medium">Frequência:</span> {activeTicket.therapyRecommendations.frequency}</p>
+                                <p><span className="font-medium">Duração:</span> {activeTicket.therapyRecommendations.duration}</p>
+                              </div>
+                            </div>
+                            
+                            <div className="space-y-3">
+                              <h3 className="text-sm font-medium">Atualizar Recomendações</h3>
+                              <div className="flex flex-col gap-1">
+                                <label htmlFor="therapy-type" className="text-xs font-medium">Tipo</label>
+                                <input 
+                                  id="therapy-type" 
+                                  type="text" 
+                                  className="border rounded-md px-3 py-2 text-sm"
+                                  placeholder="Ex: Fortalecimento Muscular"
+                                />
+                              </div>
+                              <div className="flex flex-col gap-1">
+                                <label htmlFor="therapy-desc" className="text-xs font-medium">Descrição</label>
+                                <textarea 
+                                  id="therapy-desc" 
+                                  className="border rounded-md px-3 py-2 text-sm"
+                                  placeholder="Descreva os exercícios recomendados"
+                                  rows={3}
+                                />
+                              </div>
+                              <div className="grid grid-cols-2 gap-3">
+                                <div className="flex flex-col gap-1">
+                                  <label htmlFor="therapy-freq" className="text-xs font-medium">Frequência</label>
+                                  <input 
+                                    id="therapy-freq" 
+                                    type="text" 
+                                    className="border rounded-md px-3 py-2 text-sm"
+                                    placeholder="Ex: 3 vezes por semana"
+                                  />
+                                </div>
+                                <div className="flex flex-col gap-1">
+                                  <label htmlFor="therapy-duration" className="text-xs font-medium">Duração</label>
+                                  <input 
+                                    id="therapy-duration" 
+                                    type="text" 
+                                    className="border rounded-md px-3 py-2 text-sm"
+                                    placeholder="Ex: 20 minutos por sessão"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <DialogFooter>
+                            <Button type="submit" onClick={() => {
+                              toast.success("Recomendações de fisioterapia atualizadas!");
+                              document.dispatchEvent(new CustomEvent('close-dialog'));
+                            }}>
+                              Atualizar Recomendações
+                            </Button>
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    </div>
+                  </CardHeader>
+                  
+                  <div className="px-6 py-2 bg-muted/50">
+                    <div className="flex justify-between">
+                      <div className="text-sm">
+                        <span className="font-medium">Cliente:</span> {activeTicket.clientName}
+                      </div>
+                      <div className="text-sm">
+                        <span className="font-medium">Pet:</span> {activeTicket.petName} ({activeTicket.petType})
+                      </div>
+                      <div className="text-sm">
+                        <span className="font-medium">Produto:</span> {activeTicket.productId}
+                      </div>
                     </div>
                   </div>
-                  <CardDescription>
-                    Artigos e guias para suporte e fisioterapia pós-produção
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {KNOWLEDGE_BASE_ARTICLES.map((article) => (
-                      <Card key={article.id} className="hover-lift">
-                        <CardHeader className="pb-3">
-                          <div className="flex justify-between items-start">
-                            <CardTitle className="text-base">{article.title}</CardTitle>
-                            <Badge variant="outline" className="ml-2 shrink-0">
-                              {article.category}
-                            </Badge>
-                          </div>
-                        </CardHeader>
-                        <CardContent className="pb-3">
-                          <p className="text-sm text-muted-foreground">
-                            {article.excerpt}
-                          </p>
-                        </CardContent>
-                        <CardFooter className="flex justify-between text-xs text-muted-foreground">
-                          <div className="flex items-center">
-                            <Clock className="h-3 w-3 mr-1" />
-                            {article.readingTime}
-                          </div>
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            className="h-7 px-2 text-ocean-600 hover:text-ocean-700 hover:bg-ocean-50 dark:text-ocean-400 dark:hover:bg-ocean-900/20"
-                            onClick={() => toast.success("Artigo aberto!")}
-                          >
-                            Ler artigo
-                            <ChevronRight className="h-3 w-3 ml-1" />
-                          </Button>
-                        </CardFooter>
-                      </Card>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          {/* Therapy Partners Tab */}
-          <TabsContent value="therapy" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-3">
-                <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-xl font-semibold">Parceiros de Fisioterapia</h2>
-                  <Button 
-                    variant="outline"
-                    onClick={() => toast.success("Planilha exportada com sucesso!")}
-                  >
-                    <FileText className="h-4 w-4 mr-2" />
-                    Exportar Lista
-                  </Button>
-                </div>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {THERAPY_PARTNERS.map((partner) => (
-                    <Card key={partner.id} className="hover-lift">
-                      <CardHeader className="pb-3">
-                        <div className="flex justify-between items-start">
-                          <CardTitle className="text-lg">{partner.name}</CardTitle>
-                          <div className="flex items-center">
-                            <Star className="h-4 w-4 text-amber-500 fill-amber-500" />
-                            <span className="ml-1 text-sm">{partner.rating}</span>
-                          </div>
-                        </div>
-                        <CardDescription>
-                          {partner.specialty}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="space-y-3 pb-3">
-                        <div className="text-sm">
-                          <div className="flex items-center mb-1">
-                            <Map className="h-4 w-4 text-muted-foreground mr-2" />
-                            <span>{partner.address}</span>
-                          </div>
-                          <div className="flex items-center mb-1">
-                            <Phone className="h-4 w-4 text-muted-foreground mr-2" />
-                            <span>{partner.phone}</span>
-                          </div>
-                          <div className="flex items-center">
-                            <Mail className="h-4 w-4 text-muted-foreground mr-2" />
-                            <span>{partner.email}</span>
-                          </div>
-                        </div>
-                        
-                        <div>
-                          <h4 className="text-sm font-medium mb-2">Serviços</h4>
-                          <div className="flex flex-wrap gap-2">
-                            {partner.services.map((service, index) => (
-                              <Badge key={index} variant="outline">
-                                {service}
-                              </Badge>
-                            ))}
-                          </div>
-                        </div>
-                      </CardContent>
-                      <CardFooter className="flex justify-between pt-3 border-t">
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => toast.success("Informações de contato copiadas!")}
+                  
+                  <Separator />
+                  
+                  <CardContent className="p-0 flex-grow overflow-auto">
+                    <div className="px-6 py-4 space-y-4 max-h-[360px] overflow-y-auto">
+                      <div className="bg-muted p-3 rounded-md">
+                        <h3 className="text-sm font-medium mb-2">Descrição do Problema</h3>
+                        <p className="text-sm">{activeTicket.description}</p>
+                      </div>
+                      
+                      {activeTicket.messages.map((message) => (
+                        <div 
+                          key={message.id} 
+                          className={`flex ${message.sender === 'client' ? 'justify-start' : 'justify-end'}`}
                         >
-                          <Phone className="h-3.5 w-3.5 mr-1" />
-                          Contatar
-                        </Button>
+                          <div 
+                            className={`max-w-[80%] rounded-lg p-3 ${
+                              message.sender === 'client' 
+                                ? 'bg-muted' 
+                                : 'bg-primary text-primary-foreground'
+                            }`}
+                          >
+                            <div className="text-sm">{message.content}</div>
+                            <div className="text-xs mt-1 text-right opacity-70">
+                              {new Date(message.timestamp).toLocaleTimeString('pt-BR', { 
+                                hour: '2-digit', 
+                                minute: '2-digit',
+                                day: '2-digit',
+                                month: '2-digit'
+                              })}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                  
+                  <CardFooter className="p-4 mt-auto border-t">
+                    {activeTicket.status !== "closed" ? (
+                      <div className="flex items-center w-full gap-2">
+                        <input
+                          type="text"
+                          placeholder="Digite sua mensagem..."
+                          className="flex-grow px-3 py-2 rounded-md border"
+                          value={newMessage}
+                          onChange={(e) => setNewMessage(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                              e.preventDefault();
+                              handleSendMessage();
+                            }
+                          }}
+                        />
                         <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => toast.success("Redirecionando para o mapa...")}
+                          onClick={handleSendMessage}
+                          disabled={!newMessage.trim()}
                         >
-                          <Map className="h-3.5 w-3.5 mr-1" />
-                          Ver no Mapa
+                          <Send className="h-4 w-4 mr-2" />
+                          Enviar
                         </Button>
-                        <Button 
-                          size="sm"
-                          className="bg-ocean-600 hover:bg-ocean-700"
-                          onClick={() => setScheduleDialogOpen(true)}
-                        >
-                          <Calendar className="h-3.5 w-3.5 mr-1" />
-                          Agendar
-                        </Button>
-                      </CardFooter>
-                    </Card>
-                  ))}
-                </div>
-                
-                <div className="mt-8">
-                  <h3 className="text-lg font-semibold mb-4">Recursos para Profissionais</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Card className="hover-lift">
-                      <CardContent className="p-6">
-                        <div className="flex flex-col items-center text-center">
-                          <div className="p-3 bg-ocean-100 dark:bg-ocean-900/50 rounded-full mb-4">
-                            <FileText className="h-6 w-6 text-ocean-600 dark:text-ocean-400" />
-                          </div>
-                          <h3 className="font-medium mb-2">Guias para Fisioterapeutas</h3>
-                          <p className="text-sm text-muted-foreground mb-4">
-                            Materiais especializados para profissionais de fisioterapia animal.
-                          </p>
-                          <Button 
-                            variant="outline" 
-                            className="w-full"
-                            onClick={() => toast.success("Guias abertos!")}
-                          >
-                            Acessar Guias
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card className="hover-lift">
-                      <CardContent className="p-6">
-                        <div className="flex flex-col items-center text-center">
-                          <div className="p-3 bg-purple-100 dark:bg-purple-900/50 rounded-full mb-4">
-                            <Activity className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-                          </div>
-                          <h3 className="font-medium mb-2">Planos de Reabilitação</h3>
-                          <p className="text-sm text-muted-foreground mb-4">
-                            Modelos de planos de reabilitação para diferentes tipos de próteses.
-                          </p>
-                          <Button 
-                            variant="outline" 
-                            className="w-full"
-                            onClick={() => toast.success("Planos abertos!")}
-                          >
-                            Ver Planos
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card className="hover-lift">
-                      <CardContent className="p-6">
-                        <div className="flex flex-col items-center text-center">
-                          <div className="p-3 bg-green-100 dark:bg-green-900/50 rounded-full mb-4">
-                            <Video className="h-6 w-6 text-green-600 dark:text-green-400" />
-                          </div>
-                          <h3 className="font-medium mb-2">Vídeos Educativos</h3>
-                          <p className="text-sm text-muted-foreground mb-4">
-                            Tutoriais e demonstrações para técnicas de fisioterapia com próteses.
-                          </p>
-                          <Button 
-                            variant="outline" 
-                            className="w-full"
-                            onClick={() => toast.success("Biblioteca de vídeos aberta!")}
-                          >
-                            Assistir Vídeos
-                          </Button>
-                        </div>
-                      </CardContent>
-                    </Card>
+                      </div>
+                    ) : (
+                      <div className="w-full text-center text-muted-foreground text-sm bg-muted py-2 rounded-md">
+                        Este chamado foi fechado em {activeTicket.closedAt ? new Date(activeTicket.closedAt).toLocaleDateString('pt-BR') : 'data desconhecida'}
+                      </div>
+                    )}
+                  </CardFooter>
+                </Card>
+              ) : (
+                <div className="h-full flex items-center justify-center border rounded-lg">
+                  <div className="text-center p-8">
+                    <MessageSquare className="mx-auto h-12 w-12 text-muted-foreground/60" />
+                    <h3 className="mt-4 text-lg font-medium">Nenhum chamado selecionado</h3>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Selecione um chamado da lista para visualizar os detalhes.
+                    </p>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
-          </TabsContent>
+          </div>
         </Tabs>
       </div>
-
-      {/* Create Ticket Dialog */}
-      <Dialog open={createTicketDialogOpen} onOpenChange={setCreateTicketDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>Criar Novo Ticket</DialogTitle>
-            <DialogDescription>
-              Crie um novo ticket de suporte para atendimento ao cliente.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="client-name">Nome do Cliente*</Label>
-                <Input
-                  id="client-name"
-                  value={newTicket.clientName}
-                  onChange={(e) => setNewTicket({...newTicket, clientName: e.target.value})}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="product-id">ID do Produto</Label>
-                <Input
-                  id="product-id"
-                  placeholder="ex: OB-2023-001"
-                  value={newTicket.productId}
-                  onChange={(e) => setNewTicket({...newTicket, productId: e.target.value})}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="pet-name">Nome do Pet</Label>
-                <Input
-                  id="pet-name"
-                  value={newTicket.petName}
-                  onChange={(e) => setNewTicket({...newTicket, petName: e.target.value})}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="pet-type">Tipo do Pet</Label>
-                <Select 
-                  value={newTicket.petType} 
-                  onValueChange={(value) => setNewTicket({...newTicket, petType: value})}
-                >
-                  <SelectTrigger id="pet-type">
-                    <SelectValue placeholder="Selecione" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="dog">Cão</SelectItem>
-                    <SelectItem value="cat">Gato</SelectItem>
-                    <SelectItem value="other">Outro</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="subject">Assunto*</Label>
-              <Input
-                id="subject"
-                value={newTicket.subject}
-                onChange={(e) => setNewTicket({...newTicket, subject: e.target.value})}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="description">Descrição*</Label>
-              <Textarea
-                id="description"
-                className="min-h-[100px]"
-                value={newTicket.description}
-                onChange={(e) => setNewTicket({...newTicket, description: e.target.value})}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="priority">Prioridade</Label>
-              <Select 
-                value={newTicket.priority} 
-                onValueChange={(value) => setNewTicket({...newTicket, priority: value as TicketPriority})}
-              >
-                <SelectTrigger id="priority">
-                  <SelectValue placeholder="Selecione" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="baixa">Baixa</SelectItem>
-                  <SelectItem value="normal">Normal</SelectItem>
-                  <SelectItem value="alta">Alta</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setCreateTicketDialogOpen(false)}>Cancelar</Button>
-            <Button onClick={handleCreateTicket} className="bg-ocean-600 hover:bg-ocean-700">
-              Criar Ticket
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Schedule Appointment Dialog */}
-      <Dialog open={scheduleDialogOpen} onOpenChange={setScheduleDialogOpen}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>Agendar Consulta</DialogTitle>
-            <DialogDescription>
-              Agende uma consulta de fisioterapia ou acompanhamento.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="appointment-date">Data*</Label>
-                <Input
-                  id="appointment-date"
-                  type="date"
-                  value={newAppointment.date}
-                  onChange={(e) => setNewAppointment({...newAppointment, date: e.target.value})}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="appointment-time">Horário*</Label>
-                <Input
-                  id="appointment-time"
-                  type="time"
-                  value={newAppointment.time}
-                  onChange={(e) => setNewAppointment({...newAppointment, time: e.target.value})}
-                />
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="appointment-with">Profissional/Parceiro*</Label>
-              <Input
-                id="appointment-with"
-                value={newAppointment.with}
-                onChange={(e) => setNewAppointment({...newAppointment, with: e.target.value})}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="appointment-location">Local</Label>
-              <Input
-                id="appointment-location"
-                value={newAppointment.location}
-                onChange={(e) => setNewAppointment({...newAppointment, location: e.target.value})}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="appointment-type">Tipo de Consulta</Label>
-              <Select 
-                value={newAppointment.type} 
-                onValueChange={(value) => setNewAppointment({...newAppointment, type: value})}
-              >
-                <SelectTrigger id="appointment-type">
-                  <SelectValue placeholder="Selecione" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="fisioterapia">Fisioterapia</SelectItem>
-                  <SelectItem value="avaliacao">Avaliação</SelectItem>
-                  <SelectItem value="ajuste">Ajuste de Prótese</SelectItem>
-                  <SelectItem value="acompanhamento">Acompanhamento</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setScheduleDialogOpen(false)}>Cancelar</Button>
-            <Button onClick={handleAddAppointment} className="bg-ocean-600 hover:bg-ocean-700">
-              Agendar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Therapy Recommendation Dialog */}
-      <Dialog open={therapyRecommendationDialogOpen} onOpenChange={setTherapyRecommendationDialogOpen}>
-        <DialogContent className="sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle>Adicionar Recomendação de Terapia</DialogTitle>
-            <DialogDescription>
-              Adicione recomendações de fisioterapia ou exercícios.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="recommended-by">Recomendado Por*</Label>
-              <Input
-                id="recommended-by"
-                placeholder="Nome do profissional"
-                value={newTherapyRecommendation.recommendedBy}
-                onChange={(e) => setNewTherapyRecommendation({...newTherapyRecommendation, recommendedBy: e.target.value})}
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="recommendation">Recomendação*</Label>
-              <Textarea
-                id="recommendation"
-                className="min-h-[100px]"
-                placeholder="Detalhes da terapia recomendada, exercícios, frequência, etc."
-                value={newTherapyRecommendation.recommendation}
-                onChange={(e) => setNewTherapyRecommendation({...newTherapyRecommendation, recommendation: e.target.value})}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setTherapyRecommendationDialogOpen(false)}>Cancelar</Button>
-            <Button onClick={handleAddTherapyRecommendation} className="bg-ocean-600 hover:bg-ocean-700">
-              Adicionar
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </Layout>
   );
-};
-
-interface TicketStatusBadgeProps {
-  status: TicketStatus;
-}
-
-const TicketStatusBadge = ({ status }: TicketStatusBadgeProps) => {
-  const getStatusDetails = () => {
-    switch (status) {
-      case "aberto":
-        return { 
-          label: "Aberto", 
-          color: "bg-amber-100 text-amber-800 hover:bg-amber-100 border-amber-300" 
-        };
-      case "em_andamento":
-        return { 
-          label: "Em Andamento", 
-          color: "bg-purple-100 text-purple-800 hover:bg-purple-100 border-purple-300" 
-        };
-      case "fechado":
-        return { 
-          label: "Resolvido", 
-          color: "bg-green-600 hover:bg-green-700 text-white" 
-        };
-      default:
-        return { label: "Desconhecido", color: "" };
-    }
-  };
-
-  const { label, color } = getStatusDetails();
-
-  return (
-    <Badge
-      variant={status === "fechado" ? "default" : "outline"}
-      className={color}
-    >
-      {label}
-    </Badge>
-  );
-};
-
-interface PriorityBadgeProps {
-  priority: TicketPriority;
-}
-
-const PriorityBadge = ({ priority }: PriorityBadgeProps) => {
-  const getPriorityDetails = () => {
-    switch (priority) {
-      case "baixa":
-        return { 
-          label: "Baixa", 
-          color: "bg-blue-100 text-blue-800 hover:bg-blue-100 border-blue-300" 
-        };
-      case "normal":
-        return { 
-          label: "Normal", 
-          color: "bg-green-100 text-green-800 hover:bg-green-100 border-green-300" 
-        };
-      case "alta":
-        return { 
-          label: "Alta", 
-          color: "bg-red-100 text-red-800 hover:bg-red-100 border-red-300" 
-        };
-      default:
-        return { label: "Normal", color: "" };
-    }
-  };
-
-  const { label, color } = getPriorityDetails();
-
-  return (
-    <Badge
-      variant="outline"
-      className={color}
-    >
-      {label}
-    </Badge>
-  );
-};
-
-const getStatusLabel = (status: TicketStatus): string => {
-  switch (status) {
-    case "aberto": return "Aberto";
-    case "em_andamento": return "Em Andamento";
-    case "fechado": return "Resolvido";
-    default: return "Desconhecido";
-  }
-};
-
-const formatDate = (dateString: string) => {
-  const options: Intl.DateTimeFormatOptions = { day: '2-digit', month: '2-digit', year: 'numeric' };
-  return new Date(dateString).toLocaleDateString('pt-BR', options);
-};
-
-const formatDateTime = (dateTimeString: string) => {
-  const options: Intl.DateTimeFormatOptions = { 
-    day: '2-digit', 
-    month: '2-digit', 
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  };
-  return new Date(dateTimeString).toLocaleDateString('pt-BR', options);
 };
 
 export default Support;

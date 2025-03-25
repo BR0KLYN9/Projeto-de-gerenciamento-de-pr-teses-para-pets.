@@ -1,371 +1,410 @@
+
 import { Layout } from "@/components/Layout";
-import { useEffect, useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-  CardFooter,
+import { useState } from "react";
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardFooter, 
+  CardHeader, 
+  CardTitle 
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  CheckCircle,
-  XCircle,
-  Clock,
-  RotateCw,
-  Search,
-  ChevronsUpDown,
+import { 
+  CheckCircle2, 
+  Clock, 
+  FileText, 
+  MessageSquare, 
+  ThumbsUp, 
+  XCircle 
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableFooter,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 
-type ApprovalStatus = 'pendente' | 'aprovado' | 'rejeitado' | 'em_revisao';
+type ApprovalStatus = "pending" | "approved" | "rejected" | "revision";
 
-interface ApprovalItem {
-  id: number;
+interface Approval {
+  id: string;
   clientName: string;
   petName: string;
+  petType: string;
+  designId: string;
   designName: string;
-  submissionDate: string;
+  designVersion: number;
   status: ApprovalStatus;
+  createdAt: string;
+  comments?: string;
+  images: string[];
+  measurements: {
+    [key: string]: number;
+  };
+  materialType: string;
+  estimatedProduction: string;
+  estimatedCost: number;
 }
 
-const SAMPLE_APPROVALS: ApprovalItem[] = [
+// Sample data for approvals
+const sampleApprovals: Approval[] = [
   {
-    id: 1,
-    clientName: "Carlos Silva",
-    petName: "Rex",
-    designName: "Prótese Padrão - Pata Dianteira (Cão)",
-    submissionDate: "2024-08-15",
-    status: "pendente",
-  },
-  {
-    id: 2,
-    clientName: "Marina Costa",
-    petName: "Luna",
-    designName: "Prótese Leve - Pata Traseira (Gato)",
-    submissionDate: "2024-08-14",
-    status: "aprovado",
-  },
-  {
-    id: 3,
-    clientName: "João Mendes",
-    petName: "Toby",
-    designName: "Prótese Reforçada - Pata Dianteira (Cão)",
-    submissionDate: "2024-08-13",
-    status: "rejeitado",
-  },
-  {
-    id: 4,
-    clientName: "Ana Paula",
-    petName: "Nina",
-    designName: "Prótese Personalizada - Pata Traseira (Cão)",
-    submissionDate: "2024-08-12",
-    status: "em_revisao",
-  },
-  {
-    id: 5,
-    clientName: "Ricardo Pereira",
-    petName: "Max",
-    designName: "Prótese Padrão - Pata Dianteira (Cão)",
-    submissionDate: "2024-08-11",
-    status: "pendente",
-  },
-  {
-    id: 6,
-    clientName: "Isabela Souza",
-    petName: "Mel",
-    designName: "Prótese Leve - Pata Traseira (Gato)",
-    submissionDate: "2024-08-10",
-    status: "aprovado",
-  },
-  {
-    id: 7,
-    clientName: "Fernando Oliveira",
-    petName: "Bob",
-    designName: "Prótese Reforçada - Pata Dianteira (Cão)",
-    submissionDate: "2024-08-09",
-    status: "rejeitado",
-  },
-  {
-    id: 8,
-    clientName: "Juliana Castro",
-    petName: "Simba",
-    designName: "Prótese Personalizada - Pata Traseira (Cão)",
-    submissionDate: "2024-08-08",
-    status: "em_revisao",
-  },
-  {
-    id: 9,
-    clientName: "Gustavo Lima",
+    id: "APR001",
+    clientName: "Ricardo Silva",
     petName: "Thor",
-    designName: "Prótese Padrão - Pata Dianteira (Cão)",
-    submissionDate: "2024-08-07",
-    status: "pendente",
+    petType: "Cachorro",
+    designId: "D10023",
+    designName: "Prótese Pata Dianteira Standard",
+    designVersion: 1,
+    status: "pending",
+    createdAt: "2025-05-10T14:30:00",
+    images: ["/placeholder.svg", "/placeholder.svg"],
+    measurements: {
+      comprimento: 15.2,
+      largura: 5.8,
+      altura: 7.3,
+      circunferência: 18.5
+    },
+    materialType: "PLA Reforçado",
+    estimatedProduction: "5-7 dias",
+    estimatedCost: 850
   },
   {
-    id: 10,
-    clientName: "Patrícia Santos",
-    petName: "Lola",
-    designName: "Prótese Leve - Pata Traseira (Gato)",
-    submissionDate: "2024-08-06",
-    status: "aprovado",
+    id: "APR002",
+    clientName: "Mariana Costa",
+    petName: "Luna",
+    petType: "Cachorro",
+    designId: "D10024",
+    designName: "Prótese Pata Traseira Premium",
+    designVersion: 2,
+    status: "revision",
+    createdAt: "2025-05-08T09:15:00",
+    comments: "Cliente pediu ajustes na altura e no encaixe para maior conforto. Segunda revisão.",
+    images: ["/placeholder.svg", "/placeholder.svg"],
+    measurements: {
+      comprimento: 16.7,
+      largura: 6.2,
+      altura: 8.1,
+      circunferência: 20.3
+    },
+    materialType: "TPU Flexível",
+    estimatedProduction: "7-10 dias",
+    estimatedCost: 1200
   },
+  {
+    id: "APR003",
+    clientName: "Fernando Mendes",
+    petName: "Simba",
+    petType: "Gato",
+    designId: "D10025",
+    designName: "Prótese Pata Dianteira Felina",
+    designVersion: 1,
+    status: "approved",
+    createdAt: "2025-05-05T11:45:00",
+    images: ["/placeholder.svg"],
+    measurements: {
+      comprimento: 8.5,
+      largura: 3.2,
+      altura: 4.1,
+      circunferência: 9.8
+    },
+    materialType: "PLA Leve",
+    estimatedProduction: "4-6 dias",
+    estimatedCost: 720
+  },
+  {
+    id: "APR004",
+    clientName: "Carolina Souza",
+    petName: "Pipoca",
+    petType: "Cachorro",
+    designId: "D10026",
+    designName: "Prótese Pata Dianteira Customizada",
+    designVersion: 3,
+    status: "rejected",
+    createdAt: "2025-05-01T16:20:00",
+    comments: "Medidas incompatíveis com o modelo proposto. Nova avaliação necessária.",
+    images: ["/placeholder.svg", "/placeholder.svg"],
+    measurements: {
+      comprimento: 12.3,
+      largura: 4.5,
+      altura: 6.0,
+      circunferência: 14.7
+    },
+    materialType: "PLA Reforçado",
+    estimatedProduction: "6-8 dias",
+    estimatedCost: 950
+  }
 ];
 
 const ApprovalWorkflow = () => {
-  const [approvals, setApprovals] = useState<ApprovalItem[]>(SAMPLE_APPROVALS);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<ApprovalStatus | "">("");
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
-
-  const filteredApprovals = approvals.filter((approval) => {
-    const searchMatch =
-      approval.clientName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      approval.petName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      approval.designName.toLowerCase().includes(searchQuery.toLowerCase());
-    const statusMatch = statusFilter ? approval.status === statusFilter : true;
-    return searchMatch && statusMatch;
-  });
-
-  const totalPages = Math.ceil(filteredApprovals.length / itemsPerPage);
-  const paginatedApprovals = filteredApprovals.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  const handleStatusChange = (id: number, newStatus: ApprovalStatus) => {
-    const updatedApprovals = approvals.map((approval) =>
-      approval.id === id ? { ...approval, status: newStatus } : approval
+  const [approvals, setApprovals] = useState<Approval[]>(sampleApprovals);
+  const [activeApproval, setActiveApproval] = useState<Approval | null>(null);
+  const [activeTab, setActiveTab] = useState("pending");
+  
+  const getStatusColor = (status: ApprovalStatus) => {
+    switch (status) {
+      case "pending":
+        return "bg-amber-500";
+      case "approved":
+        return "bg-green-500";
+      case "rejected":
+        return "bg-red-500";
+      case "revision":
+        return "bg-blue-500";
+      default:
+        return "bg-gray-500";
+    }
+  };
+  
+  const getStatusBadge = (status: ApprovalStatus) => {
+    switch (status) {
+      case "pending":
+        return <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/30 dark:text-amber-400 dark:border-amber-800">Pendente</Badge>;
+      case "approved":
+        return <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200 dark:bg-green-900/30 dark:text-green-400 dark:border-green-800">Aprovado</Badge>;
+      case "rejected":
+        return <Badge variant="outline" className="bg-red-100 text-red-800 border-red-200 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800">Rejeitado</Badge>;
+      case "revision":
+        return <Badge variant="outline" className="bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400 dark:border-blue-800">Em Revisão</Badge>;
+      default:
+        return <Badge variant="outline">Desconhecido</Badge>;
+    }
+  };
+  
+  const handleViewApproval = (approval: Approval) => {
+    setActiveApproval(approval);
+  };
+  
+  const handleApprove = () => {
+    if (!activeApproval) return;
+    
+    const updatedApprovals = approvals.map(a => 
+      a.id === activeApproval.id 
+        ? { ...a, status: "approved" as ApprovalStatus } 
+        : a
     );
+    
     setApprovals(updatedApprovals);
-    toast.success(`Status do projeto de ${approvals.find(approval => approval.id === id)?.petName} alterado para ${newStatus}`);
+    setActiveApproval({ ...activeApproval, status: "approved" });
+    toast.success(`Projeto para ${activeApproval.petName} aprovado com sucesso!`);
+  };
+  
+  const handleReject = () => {
+    if (!activeApproval) return;
+    
+    const updatedApprovals = approvals.map(a => 
+      a.id === activeApproval.id 
+        ? { ...a, status: "rejected" as ApprovalStatus } 
+        : a
+    );
+    
+    setApprovals(updatedApprovals);
+    setActiveApproval({ ...activeApproval, status: "rejected" });
+    toast.error(`Projeto para ${activeApproval.petName} foi rejeitado.`);
+  };
+  
+  const handleRequestRevision = () => {
+    if (!activeApproval) return;
+    
+    const updatedApprovals = approvals.map(a => 
+      a.id === activeApproval.id 
+        ? { ...a, status: "revision" as ApprovalStatus } 
+        : a
+    );
+    
+    setApprovals(updatedApprovals);
+    setActiveApproval({ ...activeApproval, status: "revision" });
+    toast.info(`Solicitação de revisão para o projeto de ${activeApproval.petName} enviada.`);
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-    setCurrentPage(1);
-  };
-
-  const handleStatusFilterChange = (status: ApprovalStatus | "") => {
-    setStatusFilter(status);
-    setCurrentPage(1);
-  };
+  const filteredApprovals = activeTab === "all" 
+    ? approvals 
+    : approvals.filter(a => a.status === activeTab);
 
   return (
     <Layout>
-      <div className="space-y-6 animate-fade-in">
+      <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Fluxo de Aprovação
-          </h1>
+          <h1 className="text-3xl font-bold tracking-tight">Fluxo de Aprovações</h1>
           <p className="text-muted-foreground">
-            Acompanhe e gerencie as solicitações de aprovação de design de
-            próteses.
+            Gerencie e aprove os designs de próteses antes da produção.
           </p>
         </div>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Solicitações Pendentes</CardTitle>
-            <CardDescription>
-              Visualize e gerencie as solicitações de aprovação de design.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              <div className="flex items-center space-x-2">
-                <Search className="h-4 w-4" />
-                <Input
-                  type="search"
-                  placeholder="Buscar cliente, pet ou design..."
-                  value={searchQuery}
-                  onChange={handleSearchChange}
-                />
-              </div>
+        <Tabs defaultValue="pending" value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <div className="flex justify-between items-center mb-4">
+            <TabsList>
+              <TabsTrigger value="pending" className="flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                <span>Pendentes</span>
+              </TabsTrigger>
+              <TabsTrigger value="revision" className="flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                <span>Em Revisão</span>
+              </TabsTrigger>
+              <TabsTrigger value="approved" className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4" />
+                <span>Aprovados</span>
+              </TabsTrigger>
+              <TabsTrigger value="rejected" className="flex items-center gap-2">
+                <XCircle className="h-4 w-4" />
+                <span>Rejeitados</span>
+              </TabsTrigger>
+              <TabsTrigger value="all" className="flex items-center gap-2">
+                <span>Todos</span>
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
-              <div>
-                <Label htmlFor="status">Filtrar por Status</Label>
-                <Select
-                  value={statusFilter}
-                  onValueChange={(value) => handleStatusFilterChange(value as ApprovalStatus | "")}
-                >
-                  <SelectTrigger id="status">
-                    <SelectValue placeholder="Todos os Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="">Todos</SelectItem>
-                    <SelectItem value="pendente">Pendente</SelectItem>
-                    <SelectItem value="aprovado">Aprovado</SelectItem>
-                    <SelectItem value="rejeitado">Rejeitado</SelectItem>
-                    <SelectItem value="em_revisao">Em Revisão</SelectItem>
-                  </SelectContent>
-                </Select>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="col-span-1 overflow-auto max-h-[70vh]">
+              <h2 className="font-semibold mb-3">Solicitações ({filteredApprovals.length})</h2>
+              <div className="space-y-3">
+                {filteredApprovals.map((approval) => (
+                  <Card 
+                    key={approval.id} 
+                    className={`hover:shadow-md transition-shadow cursor-pointer ${activeApproval?.id === approval.id ? 'border-primary' : ''}`}
+                    onClick={() => handleViewApproval(approval)}
+                  >
+                    <CardContent className="p-4">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h3 className="font-semibold">{approval.petName}</h3>
+                          <p className="text-sm text-muted-foreground">{approval.clientName}</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-xs">{approval.designName}</span>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-end">
+                          <div className="mb-1">{getStatusBadge(approval.status)}</div>
+                          <p className="text-xs text-muted-foreground">
+                            {new Date(approval.createdAt).toLocaleDateString('pt-BR')}
+                          </p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+                
+                {filteredApprovals.length === 0 && (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <p>Nenhuma solicitação encontrada nesta categoria.</p>
+                  </div>
+                )}
               </div>
-
-              <Button
-                variant="outline"
-                className="w-full lg:w-auto"
-                onClick={() => {
-                  setApprovals(SAMPLE_APPROVALS);
-                  setSearchQuery("");
-                  setStatusFilter("");
-                  toast.info("Lista de aprovações redefinida.");
-                }}
-              >
-                <RotateCw className="h-4 w-4 mr-2" />
-                Redefinir Filtros
-              </Button>
             </div>
 
-            <div className="mt-6 relative overflow-x-auto">
-              <Table>
-                <TableCaption>
-                  Lista de solicitações de aprovação de design de próteses.
-                </TableCaption>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Cliente</TableHead>
-                    <TableHead>Pet</TableHead>
-                    <TableHead>Design</TableHead>
-                    <TableHead>Data de Envio</TableHead>
-                    <TableHead className="text-center">Status</TableHead>
-                    <TableHead className="text-center">Ações</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {paginatedApprovals.map((approval) => (
-                    <TableRow key={approval.id}>
-                      <TableCell>{approval.clientName}</TableCell>
-                      <TableCell>{approval.petName}</TableCell>
-                      <TableCell>{approval.designName}</TableCell>
-                      <TableCell>{approval.submissionDate}</TableCell>
-                      <TableCell className="text-center">
-                        {approval.status === "pendente" && (
-                          <div className="inline-flex items-center font-medium">
-                            <Clock className="h-4 w-4 mr-1 text-yellow-500" />
-                            Pendente
+            <div className="col-span-1 lg:col-span-2">
+              {activeApproval ? (
+                <Card className="h-full">
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle>{activeApproval.designName}</CardTitle>
+                        <CardDescription>ID: {activeApproval.designId} • Versão {activeApproval.designVersion}</CardDescription>
+                      </div>
+                      {getStatusBadge(activeApproval.status)}
+                    </div>
+                  </CardHeader>
+                  <CardContent className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <h3 className="text-sm font-semibold mb-2">Informações do Paciente</h3>
+                        <div className="space-y-1 text-sm">
+                          <p><span className="font-medium">Tutor:</span> {activeApproval.clientName}</p>
+                          <p><span className="font-medium">Nome:</span> {activeApproval.petName}</p>
+                          <p><span className="font-medium">Tipo:</span> {activeApproval.petType}</p>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h3 className="text-sm font-semibold mb-2">Detalhes da Prótese</h3>
+                        <div className="space-y-1 text-sm">
+                          <p><span className="font-medium">Material:</span> {activeApproval.materialType}</p>
+                          <p><span className="font-medium">Custo Estimado:</span> R$ {activeApproval.estimatedCost.toFixed(2)}</p>
+                          <p><span className="font-medium">Tempo de Produção:</span> {activeApproval.estimatedProduction}</p>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-sm font-semibold mb-3">Visualização do Modelo</h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {activeApproval.images.map((img, index) => (
+                          <div key={index} className="bg-muted rounded-md overflow-hidden aspect-square flex items-center justify-center">
+                            <img 
+                              src={img} 
+                              alt={`${activeApproval.designName} view ${index + 1}`} 
+                              className="w-full h-full object-cover"
+                            />
                           </div>
-                        )}
-                        {approval.status === "aprovado" && (
-                          <div className="inline-flex items-center font-medium">
-                            <CheckCircle className="h-4 w-4 mr-1 text-green-500" />
-                            Aprovado
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div>
+                      <h3 className="text-sm font-semibold mb-3">Medidas</h3>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        {Object.entries(activeApproval.measurements).map(([key, value]) => (
+                          <div key={key} className="bg-muted p-3 rounded-md">
+                            <p className="text-xs text-muted-foreground">{key}</p>
+                            <p className="font-medium">{value} cm</p>
                           </div>
-                        )}
-                        {approval.status === "rejeitado" && (
-                          <div className="inline-flex items-center font-medium">
-                            <XCircle className="h-4 w-4 mr-1 text-red-500" />
-                            Rejeitado
-                          </div>
-                        )}
-                        {approval.status === "em_revisao" && (
-                          <div className="inline-flex items-center font-medium">
-                            <RotateCw className="h-4 w-4 mr-1 text-blue-500" />
-                            Em Revisão
-                          </div>
-                        )}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <Select
-                          value={approval.status}
-                          onValueChange={(value) =>
-                            handleStatusChange(approval.id, value as ApprovalStatus)
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Alterar Status" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="pendente">Pendente</SelectItem>
-                            <SelectItem value="aprovado">Aprovar</SelectItem>
-                            <SelectItem value="rejeitado">Rejeitar</SelectItem>
-                            <SelectItem value="em_revisao">
-                              Em Revisão
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-                <TableFooter>
-                  <TableRow>
-                    <TableCell colSpan={6}>
-                      Total de solicitações: {filteredApprovals.length}
-                    </TableCell>
-                  </TableRow>
-                </TableFooter>
-              </Table>
-            </div>
-
-            {filteredApprovals.length > itemsPerPage && (
-              <div className="mt-6">
-                <Pagination>
-                  <PaginationContent>
-                    <PaginationPrevious
-                      href="#"
-                      onClick={() => setCurrentPage(currentPage - 1)}
-                      disabled={currentPage === 1}
-                    />
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                      (page) => (
-                        <PaginationItem key={page} active={currentPage === page}>
-                          <PaginationLink
-                            href="#"
-                            onClick={() => setCurrentPage(page)}
-                          >
-                            {page}
-                          </PaginationLink>
-                        </PaginationItem>
-                      )
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {activeApproval.comments && (
+                      <div>
+                        <h3 className="text-sm font-semibold mb-2">Comentários</h3>
+                        <div className="bg-muted p-3 rounded-md">
+                          <p className="text-sm">{activeApproval.comments}</p>
+                        </div>
+                      </div>
                     )}
-                    <PaginationNext
-                      href="#"
-                      onClick={() => setCurrentPage(currentPage + 1)}
-                      disabled={currentPage === totalPages}
-                    />
-                  </PaginationContent>
-                </Pagination>
-              </div>
-            )}
-
-            {filteredApprovals.length === 0 && (
-              <div className="text-center py-12 text-muted-foreground">
-                <Search className="mx-auto h-12 w-12 opacity-20 mb-2" />
-                <p>Nenhuma solicitação de aprovação encontrada.</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                  </CardContent>
+                  <CardFooter className="flex flex-col sm:flex-row gap-3 justify-end border-t pt-6">
+                    <Button 
+                      variant="outline" 
+                      onClick={handleReject}
+                      className="w-full sm:w-auto"
+                      disabled={activeApproval.status === "rejected"}
+                    >
+                      <XCircle className="mr-2 h-4 w-4" />
+                      Rejeitar
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      onClick={handleRequestRevision}
+                      className="w-full sm:w-auto"
+                      disabled={activeApproval.status === "revision"}
+                    >
+                      <MessageSquare className="mr-2 h-4 w-4" />
+                      Solicitar Revisão
+                    </Button>
+                    <Button 
+                      onClick={handleApprove}
+                      className="w-full sm:w-auto"
+                      disabled={activeApproval.status === "approved"}
+                    >
+                      <ThumbsUp className="mr-2 h-4 w-4" />
+                      Aprovar
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ) : (
+                <div className="h-full flex items-center justify-center border rounded-lg">
+                  <div className="text-center p-8">
+                    <FileText className="mx-auto h-12 w-12 text-muted-foreground/60" />
+                    <h3 className="mt-4 text-lg font-medium">Nenhum projeto selecionado</h3>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Selecione um projeto da lista para visualizar os detalhes.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </Tabs>
       </div>
     </Layout>
   );

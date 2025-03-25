@@ -1,73 +1,41 @@
 import { Layout } from "@/components/Layout";
-import { useState } from "react";
+import { 
+  FileDown, 
+  Truck, 
+  Package, 
+  Printer, 
+  Factory, 
+  CheckCircle2, 
+  Clock, 
+  Calendar, 
+  Search,
+  ArrowUpDown,
+  ChevronDown,
+  MoreHorizontal
+} from "lucide-react";
 import { 
   Card, 
   CardContent, 
   CardDescription, 
+  CardFooter, 
   CardHeader, 
-  CardTitle, 
-  CardFooter
+  CardTitle 
 } from "@/components/ui/card";
-import { 
-  Check,
-  Truck,
-  Construction,
-  Printer,
-  ClipboardCheck,
-  Clock,
-  Search,
-  Filter,
-  Dog,
-  Cat,
-  Calendar,
-  Hourglass,
-  PackageCheck,
-  MapPin,
-  CalendarClock,
-  AlertCircle,
-  ChevronRight,
-  Mail,
-  Phone,
-  ChevronDown,
-  FileDown
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useState } from "react";
 import { toast } from "sonner";
-import { 
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger
-} from "@/components/ui/accordion";
-import { 
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow
-} from "@/components/ui/table";
-import { 
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 
 // Sample orders data
 const SAMPLE_ORDERS = [
