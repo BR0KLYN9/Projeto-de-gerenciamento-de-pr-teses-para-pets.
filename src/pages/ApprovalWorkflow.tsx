@@ -1,4 +1,3 @@
-
 import { Layout } from "@/components/Layout";
 import { useState } from "react";
 import { 
@@ -138,7 +137,7 @@ const sampleApprovals: Approval[] = [
 const ApprovalWorkflow = () => {
   const [approvals, setApprovals] = useState<Approval[]>(sampleApprovals);
   const [activeApproval, setActiveApproval] = useState<Approval | null>(null);
-  const [activeTab, setActiveTab] = useState("pending");
+  const [activeTab, setActiveTab] = useState<ApprovalStatus | "all">("pending");
   
   const getStatusColor = (status: ApprovalStatus) => {
     switch (status) {
@@ -230,7 +229,7 @@ const ApprovalWorkflow = () => {
           </p>
         </div>
 
-        <Tabs defaultValue="pending" value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <Tabs defaultValue="pending" value={activeTab} onValueChange={(value) => setActiveTab(value as ApprovalStatus | "all")} className="w-full">
           <div className="flex justify-between items-center mb-4">
             <TabsList>
               <TabsTrigger value="pending" className="flex items-center gap-2">
