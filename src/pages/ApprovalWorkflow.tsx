@@ -44,19 +44,22 @@ interface Approval {
   estimatedCost: number;
 }
 
-// Sample data for approvals
+// Sample data for approvals with real prosthetic images
 const sampleApprovals: Approval[] = [
   {
     id: "APR001",
     clientName: "Ricardo Silva",
     petName: "Thor",
-    petType: "Cachorro",
+    petType: "dog",
     designId: "D10023",
     designName: "Prótese Pata Dianteira Standard",
     designVersion: 1,
     status: "pending",
     createdAt: "2025-05-10T14:30:00",
-    images: ["/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "https://images.unsplash.com/photo-1551884831-bbf3cdc6469e?q=80&w=1974&auto=format&fit=crop",
+      "https://www.handicappedpets.com/media/mageplaza/blog/post/image/w/a/walkin-wheels-rear-dog-wheelchair-dog-using-wheelchair-on-grass-web_3.jpg"
+    ],
     measurements: {
       comprimento: 15.2,
       largura: 5.8,
@@ -71,14 +74,17 @@ const sampleApprovals: Approval[] = [
     id: "APR002",
     clientName: "Mariana Costa",
     petName: "Luna",
-    petType: "Cachorro",
+    petType: "dog",
     designId: "D10024",
     designName: "Prótese Pata Traseira Premium",
     designVersion: 2,
     status: "revision",
     createdAt: "2025-05-08T09:15:00",
     comments: "Cliente pediu ajustes na altura e no encaixe para maior conforto. Segunda revisão.",
-    images: ["/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "https://images.unsplash.com/photo-1562715619-1789f11a0927?q=80&w=1974&auto=format&fit=crop",
+      "https://www.petsrq.com/wp-content/uploads/2022/07/Dog-Prosthetic-Leg-2-1024x680.jpg"
+    ],
     measurements: {
       comprimento: 16.7,
       largura: 6.2,
@@ -93,13 +99,16 @@ const sampleApprovals: Approval[] = [
     id: "APR003",
     clientName: "Fernando Mendes",
     petName: "Simba",
-    petType: "Gato",
+    petType: "cat",
     designId: "D10025",
     designName: "Prótese Pata Dianteira Felina",
     designVersion: 1,
     status: "approved",
     createdAt: "2025-05-05T11:45:00",
-    images: ["/placeholder.svg"],
+    images: [
+      "https://images.unsplash.com/photo-1558383817-ffc92c9dec7c?q=80&w=1974&auto=format&fit=crop",
+      "https://drsophiayin.com/app/uploads/2017/09/Glue-in-Cat-Prothesis-4.jpg"
+    ],
     measurements: {
       comprimento: 8.5,
       largura: 3.2,
@@ -114,14 +123,17 @@ const sampleApprovals: Approval[] = [
     id: "APR004",
     clientName: "Carolina Souza",
     petName: "Pipoca",
-    petType: "Cachorro",
+    petType: "dog",
     designId: "D10026",
     designName: "Prótese Pata Dianteira Customizada",
     designVersion: 3,
     status: "rejected",
     createdAt: "2025-05-01T16:20:00",
     comments: "Medidas incompatíveis com o modelo proposto. Nova avaliação necessária.",
-    images: ["/placeholder.svg", "/placeholder.svg"],
+    images: [
+      "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=1974&auto=format&fit=crop",
+      "https://www.wakeupvet.com/hs-fs/hubfs/3d-printed-prosthetic-legs-for-dogs.jpg?width=600&height=338&name=3d-printed-prosthetic-legs-for-dogs.jpg"
+    ],
     measurements: {
       comprimento: 12.3,
       largura: 4.5,
