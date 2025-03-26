@@ -63,11 +63,11 @@ const sampleDesigns: Design[] = [
     estimatedCost: 850,
     productionTime: "5-7 dias",
     images: [
-      "https://images.unsplash.com/photo-1591946614720-90a587da4a36?q=80&w=1974&auto=format&fit=crop", 
-      "https://images.unsplash.com/photo-1562715619-1789f11a0927?q=80&w=1974&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1551884831-bbf3cdc6469e?q=80&w=1974&auto=format&fit=crop"
+      "https://www.handicappedpets.com/media/mageplaza/blog/post/image/w/a/walkin-wheels-rear-dog-wheelchair-dog-using-wheelchair-on-grass-web_3.jpg",
+      "https://doglab.com/wp-content/uploads/A-prosthetic-front-leg-for-a-dog-with-missing-limb-850x520.jpg",
+      "https://barkpost.com/wp-content/uploads/2015/02/featmed5.jpg"
     ],
-    petImage: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3",
+    petImage: "https://www.dogingtonpost.com/wp-content/uploads/2019/08/GoldenRetrieverProsthetic.jpg",
     notes: "Ajustes realizados para maior conforto."
   },
   {
@@ -90,11 +90,11 @@ const sampleDesigns: Design[] = [
     estimatedCost: 1200,
     productionTime: "7-10 dias",
     images: [
-      "https://images.unsplash.com/photo-1588860939994-ce86f3900438?q=80&w=1974&auto=format&fit=crop", 
-      "https://images.unsplash.com/photo-1551937166-34e62ef69fc7?q=80&w=1974&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1597225244660-1cd128c64284?q=80&w=1974&auto=format&fit=crop"
+      "https://www.wakeupvet.com/hs-fs/hubfs/3d-printed-prosthetic-legs-for-dogs.jpg?width=600&height=338&name=3d-printed-prosthetic-legs-for-dogs.jpg",
+      "https://www.petsrq.com/wp-content/uploads/2022/07/Dog-Prosthetic-Leg-2-1024x680.jpg",
+      "https://www.fabbric.in/wp-content/uploads/2022/08/FidoBraces-01-1-1080x550.jpeg"
     ],
-    petImage: "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?q=80&w=1994&auto=format&fit=crop&ixlib=rb-4.0.3",
+    petImage: "https://www.sydneyvetspecialists.com.au/wp-content/uploads/2017/08/Holly-with-prosthesis-682x1024.jpg",
     notes: "Design customizado para maior mobilidade."
   },
   {
@@ -117,10 +117,10 @@ const sampleDesigns: Design[] = [
     estimatedCost: 720,
     productionTime: "4-6 dias",
     images: [
-      "https://images.unsplash.com/photo-1598541554375-118a8d19f100?q=80&w=1974&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1558383817-ffc92c9dec7c?q=80&w=1974&auto=format&fit=crop"
+      "https://drsophiayin.com/app/uploads/2017/09/Glue-in-Cat-Prothesis-4.jpg",
+      "https://abcnews.go.com/images/Lifestyle/ht_vincent_cat_titanium_leg_2_jc_150205_4x3_992.jpg"
     ],
-    petImage: "https://images.unsplash.com/photo-1573865526739-10659fec78a5?q=80&w=2015&auto=format&fit=crop&ixlib=rb-4.0.3",
+    petImage: "https://metro.co.uk/wp-content/uploads/2018/01/ad_262268277.jpg?quality=90&strip=all",
     notes: "Design leve e resistente para gatos."
   },
   {
@@ -143,11 +143,11 @@ const sampleDesigns: Design[] = [
     estimatedCost: 950,
     productionTime: "6-8 dias",
     images: [
-      "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=1974&auto=format&fit=crop", 
-      "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=1974&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1582740497914-7e9dec7ce761?q=80&w=1974&auto=format&fit=crop"
+      "https://i.pinimg.com/originals/1b/a6/24/1ba6243d91f8a80fcca27bceacef4b33.jpg",
+      "https://upload.wikimedia.org/wikipedia/commons/e/e5/Pet_dog_with_prosthetic_leg.jpg",
+      "https://petprosthetics.com/wp-content/uploads/bb-plugin/cache/prosthetic-animal-prosthetics-square.jpg"
     ],
-    petImage: "https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3",
+    petImage: "https://static.scientificamerican.com/blogs/cache/file/BB1F0C23-9C65-47B0-938171E9E3A61065_source.jpg",
     notes: "Design ergonômico para cães ativos."
   },
   {
@@ -170,11 +170,11 @@ const sampleDesigns: Design[] = [
     estimatedCost: 1300,
     productionTime: "8-12 dias",
     images: [
-      "https://images.unsplash.com/photo-1526570207772-784d36084510?q=80&w=1974&auto=format&fit=crop", 
-      "https://images.unsplash.com/photo-1562184552-997c461abbe6?q=80&w=1974&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1614308458117-4509a89582f2?q=80&w=1974&auto=format&fit=crop"
+      "https://media-cldnry.s-nbcnews.com/image/upload/t_focal-380x380,f_auto,q_auto:best/rockcms/2023-03/230317-dog-prosthetics-al-1256-82a1ef.jpg",
+      "https://gfycat.com/welcomegratefulhorsemouse-dog-prosthetic-3d-printing-engineering",
+      "https://www.3dsourced.com/wp-content/uploads/2023/02/3D-Printed-Prosthetics-For-Dogs.jpg"
     ],
-    petImage: "https://images.unsplash.com/photo-1561037404-61cd46aa615b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
+    petImage: "https://i.guim.co.uk/img/media/fe8409183a0cb006c8a26c90fecf4a168ee6c218/0_0_1024_1024/master/1024.jpg?width=700&quality=85&auto=format&fit=max&s=a7d07435be68bd1bb7af7dc98db84a3e",
     notes: "Design articulado para maior flexibilidade."
   },
   {
@@ -197,11 +197,11 @@ const sampleDesigns: Design[] = [
     estimatedCost: 680,
     productionTime: "3-5 dias",
     images: [
-      "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=1974&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1565071783289-b962c4181fee?q=80&w=1974&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1555436169-20e93ea9a7ff?q=80&w=1974&auto=format&fit=crop"
+      "https://thumbs.dreamstime.com/b/orange-tabby-cat-prosthetic-limb-orange-tabby-cat-prosthetic-limb-sitting-120449478.jpg",
+      "https://www.thedodo.com/dodowell/cat-gets-prosthetic-legs",
+      "https://cdn.shopify.com/s/files/1/0566/7193/0225/files/image3_63e1a6fa-0afe-4693-bad2-ee1ec3d6b9aa_1024x1024.jpg?v=1627504946"
     ],
-    petImage: "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?q=80&w=2035&auto=format&fit=crop&ixlib=rb-4.0.3",
+    petImage: "https://static01.nyt.com/images/2021/06/02/multimedia/02xp-cat/02xp-cat-jumbo.jpg",
     notes: "Design ultra leve para gatos delicados."
   }
 ];
