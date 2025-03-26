@@ -62,7 +62,11 @@ const sampleDesigns: Design[] = [
     materialType: "PLA Reforçado",
     estimatedCost: 850,
     productionTime: "5-7 dias",
-    images: ["https://images.unsplash.com/photo-1591946614720-90a587da4a36?q=80&w=1974&auto=format&fit=crop", "https://images.unsplash.com/photo-1606225457115-9b0de873c5db?q=80&w=1974&auto=format&fit=crop"],
+    images: [
+      "https://images.unsplash.com/photo-1591946614720-90a587da4a36?q=80&w=1974&auto=format&fit=crop", 
+      "https://images.unsplash.com/photo-1562715619-1789f11a0927?q=80&w=1974&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1551884831-bbf3cdc6469e?q=80&w=1974&auto=format&fit=crop"
+    ],
     petImage: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3",
     notes: "Ajustes realizados para maior conforto."
   },
@@ -85,7 +89,11 @@ const sampleDesigns: Design[] = [
     materialType: "TPU Flexível",
     estimatedCost: 1200,
     productionTime: "7-10 dias",
-    images: ["https://images.unsplash.com/photo-1579454341352-9e6edcca23bc?q=80&w=1974&auto=format&fit=crop", "https://images.unsplash.com/photo-1607077931097-a5fb7080af62?q=80&w=1974&auto=format&fit=crop"],
+    images: [
+      "https://images.unsplash.com/photo-1588860939994-ce86f3900438?q=80&w=1974&auto=format&fit=crop", 
+      "https://images.unsplash.com/photo-1551937166-34e62ef69fc7?q=80&w=1974&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1597225244660-1cd128c64284?q=80&w=1974&auto=format&fit=crop"
+    ],
     petImage: "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?q=80&w=1994&auto=format&fit=crop&ixlib=rb-4.0.3",
     notes: "Design customizado para maior mobilidade."
   },
@@ -108,7 +116,10 @@ const sampleDesigns: Design[] = [
     materialType: "PLA Leve",
     estimatedCost: 720,
     productionTime: "4-6 dias",
-    images: ["https://images.unsplash.com/photo-1598541554375-118a8d19f100?q=80&w=1974&auto=format&fit=crop"],
+    images: [
+      "https://images.unsplash.com/photo-1598541554375-118a8d19f100?q=80&w=1974&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1558383817-ffc92c9dec7c?q=80&w=1974&auto=format&fit=crop"
+    ],
     petImage: "https://images.unsplash.com/photo-1573865526739-10659fec78a5?q=80&w=2015&auto=format&fit=crop&ixlib=rb-4.0.3",
     notes: "Design leve e resistente para gatos."
   },
@@ -131,7 +142,11 @@ const sampleDesigns: Design[] = [
     materialType: "PLA Reforçado",
     estimatedCost: 950,
     productionTime: "6-8 dias",
-    images: ["https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=1974&auto=format&fit=crop", "https://images.unsplash.com/photo-1582298538104-fe2e74c36256?q=80&w=1974&auto=format&fit=crop"],
+    images: [
+      "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=1974&auto=format&fit=crop", 
+      "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=1974&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1582740497914-7e9dec7ce761?q=80&w=1974&auto=format&fit=crop"
+    ],
     petImage: "https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3",
     notes: "Design ergonômico para cães ativos."
   },
@@ -154,7 +169,11 @@ const sampleDesigns: Design[] = [
     materialType: "TPU Flexível",
     estimatedCost: 1300,
     productionTime: "8-12 dias",
-    images: ["https://images.unsplash.com/photo-1597852074816-d933c7d2b988?q=80&w=1974&auto=format&fit=crop", "https://images.unsplash.com/photo-1624821588855-a3effc34a824?q=80&w=1974&auto=format&fit=crop"],
+    images: [
+      "https://images.unsplash.com/photo-1526570207772-784d36084510?q=80&w=1974&auto=format&fit=crop", 
+      "https://images.unsplash.com/photo-1562184552-997c461abbe6?q=80&w=1974&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1614308458117-4509a89582f2?q=80&w=1974&auto=format&fit=crop"
+    ],
     petImage: "https://images.unsplash.com/photo-1561037404-61cd46aa615b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
     notes: "Design articulado para maior flexibilidade."
   },
@@ -177,7 +196,11 @@ const sampleDesigns: Design[] = [
     materialType: "PLA Leve",
     estimatedCost: 680,
     productionTime: "3-5 dias",
-    images: ["https://images.unsplash.com/photo-1587401151971-76be3c5db98d?q=80&w=1974&auto=format&fit=crop"],
+    images: [
+      "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=1974&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1565071783289-b962c4181fee?q=80&w=1974&auto=format&fit=crop",
+      "https://images.unsplash.com/photo-1555436169-20e93ea9a7ff?q=80&w=1974&auto=format&fit=crop"
+    ],
     petImage: "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?q=80&w=2035&auto=format&fit=crop&ixlib=rb-4.0.3",
     notes: "Design ultra leve para gatos delicados."
   }
