@@ -19,6 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
 
 interface Design {
   id: string;
@@ -37,6 +38,7 @@ interface Design {
   estimatedCost: number;
   productionTime: string;
   images: string[];
+  petImage?: string;
   notes?: string;
 }
 
@@ -61,6 +63,7 @@ const sampleDesigns: Design[] = [
     estimatedCost: 850,
     productionTime: "5-7 dias",
     images: ["/placeholder.svg", "/placeholder.svg"],
+    petImage: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3",
     notes: "Ajustes realizados para maior conforto."
   },
   {
@@ -83,6 +86,7 @@ const sampleDesigns: Design[] = [
     estimatedCost: 1200,
     productionTime: "7-10 dias",
     images: ["/placeholder.svg", "/placeholder.svg"],
+    petImage: "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?q=80&w=1994&auto=format&fit=crop&ixlib=rb-4.0.3",
     notes: "Design customizado para maior mobilidade."
   },
   {
@@ -105,6 +109,7 @@ const sampleDesigns: Design[] = [
     estimatedCost: 720,
     productionTime: "4-6 dias",
     images: ["/placeholder.svg"],
+    petImage: "https://images.unsplash.com/photo-1573865526739-10659fec78a5?q=80&w=2015&auto=format&fit=crop&ixlib=rb-4.0.3",
     notes: "Design leve e resistente para gatos."
   },
   {
@@ -127,6 +132,7 @@ const sampleDesigns: Design[] = [
     estimatedCost: 950,
     productionTime: "6-8 dias",
     images: ["/placeholder.svg", "/placeholder.svg"],
+    petImage: "https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3",
     notes: "Design ergonômico para cães ativos."
   },
   {
@@ -149,6 +155,7 @@ const sampleDesigns: Design[] = [
     estimatedCost: 1300,
     productionTime: "8-12 dias",
     images: ["/placeholder.svg", "/placeholder.svg"],
+    petImage: "https://images.unsplash.com/photo-1561037404-61cd46aa615b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
     notes: "Design articulado para maior flexibilidade."
   },
   {
@@ -171,6 +178,7 @@ const sampleDesigns: Design[] = [
     estimatedCost: 680,
     productionTime: "3-5 dias",
     images: ["/placeholder.svg"],
+    petImage: "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?q=80&w=2035&auto=format&fit=crop&ixlib=rb-4.0.3",
     notes: "Design ultra leve para gatos delicados."
   }
 ];
@@ -293,13 +301,24 @@ const ProstheticDesign = () => {
                   >
                     <CardContent className="p-4">
                       <div className="flex justify-between items-start">
-                        <div>
-                          <h3 className="font-semibold">{design.name}</h3>
-                          <p className="text-sm text-muted-foreground">
-                            {design.clientName} • {design.petName}
-                          </p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className="text-xs">Versão {design.version}</span>
+                        <div className="flex gap-3">
+                          {design.petImage && (
+                            <div className="w-16 h-16 rounded-md overflow-hidden">
+                              <img 
+                                src={design.petImage} 
+                                alt={design.petName} 
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                          )}
+                          <div>
+                            <h3 className="font-semibold">{design.name}</h3>
+                            <p className="text-sm text-muted-foreground">
+                              {design.clientName} • {design.petName}
+                            </p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-xs">Versão {design.version}</span>
+                            </div>
                           </div>
                         </div>
                         <div className="flex flex-col items-end">
@@ -339,10 +358,22 @@ const ProstheticDesign = () => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
                         <h3 className="text-sm font-semibold mb-2">Informações do Paciente</h3>
-                        <div className="space-y-1 text-sm">
+                        <div className="space-y-3 text-sm">
                           <p><span className="font-medium">Tutor:</span> {activeDesign.clientName}</p>
                           <p><span className="font-medium">Nome:</span> {activeDesign.petName}</p>
                           <p><span className="font-medium">Tipo:</span> {activeDesign.petType}</p>
+                          {activeDesign.petImage && (
+                            <div className="mt-2">
+                              <p className="font-medium mb-1">Foto do Pet:</p>
+                              <div className="w-full max-w-[200px] rounded-md overflow-hidden">
+                                <img 
+                                  src={activeDesign.petImage} 
+                                  alt={activeDesign.petName} 
+                                  className="w-full h-auto object-cover"
+                                />
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
 
