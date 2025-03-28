@@ -1,4 +1,3 @@
-
 import { Layout } from "@/components/Layout";
 import { 
   Box, 
@@ -37,7 +36,7 @@ interface Design {
   materialType: string;
   estimatedCost: number;
   productionTime: string;
-  images: string[];
+  modelDetails: string;
   petImage?: string;
   notes?: string;
 }
@@ -62,11 +61,7 @@ const sampleDesigns: Design[] = [
     materialType: "PLA Reforçado",
     estimatedCost: 850,
     productionTime: "5-7 dias",
-    images: [
-      "https://images.unsplash.com/photo-1591946614720-90a587da4a36?q=80&w=1974&auto=format&fit=crop", 
-      "https://images.unsplash.com/photo-1562715619-1789f11a0927?q=80&w=1974&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1551884831-bbf3cdc6469e?q=80&w=1974&auto=format&fit=crop"
-    ],
+    modelDetails: "Prótese Canina PawStep A200 - Modelo Anatômico para Membros Anteriores",
     petImage: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3",
     notes: "Ajustes realizados para maior conforto."
   },
@@ -89,11 +84,7 @@ const sampleDesigns: Design[] = [
     materialType: "TPU Flexível",
     estimatedCost: 1200,
     productionTime: "7-10 dias",
-    images: [
-      "https://images.unsplash.com/photo-1588860939994-ce86f3900438?q=80&w=1974&auto=format&fit=crop", 
-      "https://images.unsplash.com/photo-1551937166-34e62ef69fc7?q=80&w=1974&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1597225244660-1cd128c64284?q=80&w=1974&auto=format&fit=crop"
-    ],
+    modelDetails: "Prótese Canina HindLeg Pro X3 - Sistema Articulado de Alta Resistência",
     petImage: "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8?q=80&w=1994&auto=format&fit=crop&ixlib=rb-4.0.3",
     notes: "Design customizado para maior mobilidade."
   },
@@ -116,10 +107,7 @@ const sampleDesigns: Design[] = [
     materialType: "PLA Leve",
     estimatedCost: 720,
     productionTime: "4-6 dias",
-    images: [
-      "https://images.unsplash.com/photo-1598541554375-118a8d19f100?q=80&w=1974&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1558383817-ffc92c9dec7c?q=80&w=1974&auto=format&fit=crop"
-    ],
+    modelDetails: "Prótese Felina MicroStep F100 - Ultra Leve para Gatos de Pequeno Porte",
     petImage: "https://images.unsplash.com/photo-1573865526739-10659fec78a5?q=80&w=2015&auto=format&fit=crop&ixlib=rb-4.0.3",
     notes: "Design leve e resistente para gatos."
   },
@@ -142,11 +130,7 @@ const sampleDesigns: Design[] = [
     materialType: "PLA Reforçado",
     estimatedCost: 950,
     productionTime: "6-8 dias",
-    images: [
-      "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=1974&auto=format&fit=crop", 
-      "https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=1974&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1582740497914-7e9dec7ce761?q=80&w=1974&auto=format&fit=crop"
-    ],
+    modelDetails: "Prótese Canina CustomFit C220 - Personalizada para Raças de Médio Porte",
     petImage: "https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3",
     notes: "Design ergonômico para cães ativos."
   },
@@ -169,11 +153,7 @@ const sampleDesigns: Design[] = [
     materialType: "TPU Flexível",
     estimatedCost: 1300,
     productionTime: "8-12 dias",
-    images: [
-      "https://images.unsplash.com/photo-1526570207772-784d36084510?q=80&w=1974&auto=format&fit=crop", 
-      "https://images.unsplash.com/photo-1562184552-997c461abbe6?q=80&w=1974&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1614308458117-4509a89582f2?q=80&w=1974&auto=format&fit=crop"
-    ],
+    modelDetails: "Prótese Canina MaxiJoint J450 - Sistema Articulado para Cães de Grande Porte",
     petImage: "https://images.unsplash.com/photo-1561037404-61cd46aa615b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3",
     notes: "Design articulado para maior flexibilidade."
   },
@@ -196,11 +176,7 @@ const sampleDesigns: Design[] = [
     materialType: "PLA Leve",
     estimatedCost: 680,
     productionTime: "3-5 dias",
-    images: [
-      "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=1974&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1565071783289-b962c4181fee?q=80&w=1974&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1555436169-20e93ea9a7ff?q=80&w=1974&auto=format&fit=crop"
-    ],
+    modelDetails: "Prótese Felina NanoFlex F50 - Ultracompacta para Gatos Filhotes",
     petImage: "https://images.unsplash.com/photo-1548802673-380ab8ebc7b7?q=80&w=2035&auto=format&fit=crop&ixlib=rb-4.0.3",
     notes: "Design ultra leve para gatos delicados."
   }
@@ -412,16 +388,21 @@ const ProstheticDesign = () => {
 
                     <div>
                       <h3 className="text-sm font-semibold mb-3">Visualização do Modelo</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {activeDesign.images.map((img, index) => (
-                          <div key={index} className="bg-muted rounded-md overflow-hidden aspect-square flex items-center justify-center">
-                            <img
-                              src={img}
-                              alt={`${activeDesign.name} view ${index + 1}`}
-                              className="w-full h-full object-cover"
-                            />
+                      <div className="bg-muted p-4 rounded-md">
+                        <div className="text-center">
+                          <h4 className="text-xl font-bold text-primary mb-3">{activeDesign.modelDetails}</h4>
+                          <div className="flex justify-center items-center space-x-4">
+                            <div className="bg-primary/10 px-3 py-1 rounded-full text-primary text-sm">
+                              Versão {activeDesign.version}
+                            </div>
+                            <div className="bg-primary/10 px-3 py-1 rounded-full text-primary text-sm">
+                              {activeDesign.materialType}
+                            </div>
                           </div>
-                        ))}
+                          <div className="mt-3 text-sm text-muted-foreground">
+                            Design especializado para {activeDesign.petType.toLowerCase()}s
+                          </div>
+                        </div>
                       </div>
                     </div>
 
