@@ -1,4 +1,3 @@
-
 import { Layout } from "@/components/Layout";
 import { useState } from "react";
 import { 
@@ -59,7 +58,7 @@ const sampleApprovals: Approval[] = [
     status: "pending",
     createdAt: "2025-05-10T14:30:00",
     images: [
-      "https://www.handicappedpets.com/media/mageplaza/blog/post/image/w/a/walkin-wheels-rear-dog-wheelchair-dog-using-wheelchair-on-grass-web_3.jpg"
+      "https://images.unsplash.com/photo-1582562124811-c09040d0a901"
     ],
     measurements: {
       comprimento: 15.2,
@@ -83,7 +82,7 @@ const sampleApprovals: Approval[] = [
     createdAt: "2025-05-08T09:15:00",
     comments: "Cliente pediu ajustes na altura e no encaixe para maior conforto. Segunda revisão.",
     images: [
-      "https://vetmed.illinois.edu/wp-content/uploads/2021/05/p-patch-scaled-e1620657180619-768x576.jpeg"
+      "https://images.unsplash.com/photo-1535268647677-300dbf3d78d1"
     ],
     measurements: {
       comprimento: 16.7,
@@ -106,7 +105,7 @@ const sampleApprovals: Approval[] = [
     status: "approved",
     createdAt: "2025-05-05T11:45:00",
     images: [
-      "https://drsophiayin.com/app/uploads/2017/09/Glue-in-Cat-Prothesis-4.jpg"
+      "https://images.unsplash.com/photo-1466721591366-2d5fba72006d"
     ],
     measurements: {
       comprimento: 8.5,
@@ -130,7 +129,7 @@ const sampleApprovals: Approval[] = [
     createdAt: "2025-05-01T16:20:00",
     comments: "Medidas incompatíveis com o modelo proposto. Nova avaliação necessária.",
     images: [
-      "https://www.calibrepress.com/wp-content/uploads/2019/12/GettyImages-1068693964-800x430.jpg"
+      "https://images.unsplash.com/photo-1501286353178-1ec881214838"
     ],
     measurements: {
       comprimento: 12.3,
@@ -344,11 +343,6 @@ const ApprovalWorkflow = () => {
                               src={activeApproval.images[0]} 
                               alt={`${activeApproval.petName}`}
                               className="object-cover w-full h-full"
-                              onError={(e) => {
-                                const target = e.target as HTMLImageElement;
-                                target.onerror = null;
-                                target.src = "https://placehold.co/400x300/e2e8f0/a0aec0?text=Imagem+não+disponível";
-                              }}
                             />
                           </AspectRatio>
                         </div>
