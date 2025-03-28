@@ -58,7 +58,7 @@ const sampleApprovals: Approval[] = [
     status: "pending",
     createdAt: "2025-05-10T14:30:00",
     images: [
-      "https://images.unsplash.com/photo-1582562124811-c09040d0a901"
+      "https://images.unsplash.com/photo-1543466835-00a7907e9de1"
     ],
     measurements: {
       comprimento: 15.2,
@@ -82,7 +82,7 @@ const sampleApprovals: Approval[] = [
     createdAt: "2025-05-08T09:15:00",
     comments: "Cliente pediu ajustes na altura e no encaixe para maior conforto. Segunda revisão.",
     images: [
-      "https://images.unsplash.com/photo-1535268647677-300dbf3d78d1"
+      "https://images.unsplash.com/photo-1537151608828-ea2b11777ee8"
     ],
     measurements: {
       comprimento: 16.7,
@@ -105,7 +105,7 @@ const sampleApprovals: Approval[] = [
     status: "approved",
     createdAt: "2025-05-05T11:45:00",
     images: [
-      "https://images.unsplash.com/photo-1466721591366-2d5fba72006d"
+      "https://images.unsplash.com/photo-1573865526739-10659fec78a5"
     ],
     measurements: {
       comprimento: 8.5,
@@ -129,7 +129,7 @@ const sampleApprovals: Approval[] = [
     createdAt: "2025-05-01T16:20:00",
     comments: "Medidas incompatíveis com o modelo proposto. Nova avaliação necessária.",
     images: [
-      "https://images.unsplash.com/photo-1501286353178-1ec881214838"
+      "https://images.unsplash.com/photo-1583512603805-3cc6b41f3edb"
     ],
     measurements: {
       comprimento: 12.3,
