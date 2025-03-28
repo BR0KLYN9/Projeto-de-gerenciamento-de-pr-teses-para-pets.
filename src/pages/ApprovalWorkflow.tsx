@@ -1,3 +1,4 @@
+
 import { Layout } from "@/components/Layout";
 import { useState } from "react";
 import { 
@@ -21,6 +22,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 type ApprovalStatus = "pending" | "approved" | "rejected" | "revision";
 
@@ -57,8 +59,8 @@ const sampleApprovals: Approval[] = [
     status: "pending",
     createdAt: "2025-05-10T14:30:00",
     images: [
-      "https://images.unsplash.com/photo-1551884831-bbf3cdc6469e?q=80&w=1974&auto=format&fit=crop",
-      "https://www.handicappedpets.com/media/mageplaza/blog/post/image/w/a/walkin-wheels-rear-dog-wheelchair-dog-using-wheelchair-on-grass-web_3.jpg"
+      "https://www.handicappedpets.com/media/mageplaza/blog/post/image/w/a/walkin-wheels-rear-dog-wheelchair-dog-using-wheelchair-on-grass-web_3.jpg",
+      "https://www.handicappedpets.com/media/wysiwyg/hp-line-dogs/dog-wheelchair-hope.jpg"
     ],
     measurements: {
       comprimento: 15.2,
@@ -82,8 +84,8 @@ const sampleApprovals: Approval[] = [
     createdAt: "2025-05-08T09:15:00",
     comments: "Cliente pediu ajustes na altura e no encaixe para maior conforto. Segunda revisão.",
     images: [
-      "https://images.unsplash.com/photo-1562715619-1789f11a0927?q=80&w=1974&auto=format&fit=crop",
-      "https://www.petsrq.com/wp-content/uploads/2022/07/Dog-Prosthetic-Leg-2-1024x680.jpg"
+      "https://www.petsrq.com/wp-content/uploads/2022/07/Dog-Prosthetic-Leg-2-1024x680.jpg",
+      "https://vetmed.illinois.edu/wp-content/uploads/2021/05/p-patch-scaled-e1620657180619-768x576.jpeg"
     ],
     measurements: {
       comprimento: 16.7,
@@ -106,8 +108,8 @@ const sampleApprovals: Approval[] = [
     status: "approved",
     createdAt: "2025-05-05T11:45:00",
     images: [
-      "https://images.unsplash.com/photo-1558383817-ffc92c9dec7c?q=80&w=1974&auto=format&fit=crop",
-      "https://drsophiayin.com/app/uploads/2017/09/Glue-in-Cat-Prothesis-4.jpg"
+      "https://drsophiayin.com/app/uploads/2017/09/Glue-in-Cat-Prothesis-4.jpg",
+      "https://drsophiayin.com/app/uploads/2017/09/Glue-in-Cat-Prothesis-5-1024x689.jpg"
     ],
     measurements: {
       comprimento: 8.5,
@@ -131,8 +133,8 @@ const sampleApprovals: Approval[] = [
     createdAt: "2025-05-01T16:20:00",
     comments: "Medidas incompatíveis com o modelo proposto. Nova avaliação necessária.",
     images: [
-      "https://images.unsplash.com/photo-1581092580497-e0d23cbdf1dc?q=80&w=1974&auto=format&fit=crop",
-      "https://www.wakeupvet.com/hs-fs/hubfs/3d-printed-prosthetic-legs-for-dogs.jpg?width=600&height=338&name=3d-printed-prosthetic-legs-for-dogs.jpg"
+      "https://www.wakeupvet.com/hs-fs/hubfs/3d-printed-prosthetic-legs-for-dogs.jpg?width=600&height=338&name=3d-printed-prosthetic-legs-for-dogs.jpg",
+      "https://www.calibrepress.com/wp-content/uploads/2019/12/GettyImages-1068693964-800x430.jpg"
     ],
     measurements: {
       comprimento: 12.3,
@@ -323,7 +325,7 @@ const ApprovalWorkflow = () => {
                         <div className="space-y-1 text-sm">
                           <p><span className="font-medium">Tutor:</span> {activeApproval.clientName}</p>
                           <p><span className="font-medium">Nome:</span> {activeApproval.petName}</p>
-                          <p><span className="font-medium">Tipo:</span> {activeApproval.petType}</p>
+                          <p><span className="font-medium">Tipo:</span> {activeApproval.petType === "dog" ? "Cachorro" : "Gato"}</p>
                         </div>
                       </div>
                       
@@ -341,12 +343,19 @@ const ApprovalWorkflow = () => {
                       <h3 className="text-sm font-semibold mb-3">Visualização do Modelo</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {activeApproval.images.map((img, index) => (
-                          <div key={index} className="bg-muted rounded-md overflow-hidden aspect-square flex items-center justify-center">
-                            <img 
-                              src={img} 
-                              alt={`${activeApproval.designName} view ${index + 1}`} 
-                              className="w-full h-full object-cover"
-                            />
+                          <div key={index} className="bg-muted rounded-md overflow-hidden relative">
+                            <AspectRatio ratio={4/3} className="w-full">
+                              <img 
+                                src={img} 
+                                alt={`${activeApproval.designName} view ${index + 1}`}
+                                className="object-cover w-full h-full"
+                                onError={(e) => {
+                                  const target = e.target as HTMLImageElement;
+                                  target.onerror = null;
+                                  target.src = "https://placehold.co/400x300/e2e8f0/a0aec0?text=Imagem+não+disponível";
+                                }}
+                              />
+                            </AspectRatio>
                           </div>
                         ))}
                       </div>
