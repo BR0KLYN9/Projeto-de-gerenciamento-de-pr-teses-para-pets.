@@ -1,4 +1,3 @@
-
 import { Layout } from "@/components/Layout";
 import { useState } from "react";
 import { 
@@ -59,8 +58,7 @@ const sampleApprovals: Approval[] = [
     status: "pending",
     createdAt: "2025-05-10T14:30:00",
     images: [
-      "https://www.handicappedpets.com/media/mageplaza/blog/post/image/w/a/walkin-wheels-rear-dog-wheelchair-dog-using-wheelchair-on-grass-web_3.jpg",
-      "https://www.handicappedpets.com/media/wysiwyg/hp-line-dogs/dog-wheelchair-hope.jpg"
+      "https://www.handicappedpets.com/media/mageplaza/blog/post/image/w/a/walkin-wheels-rear-dog-wheelchair-dog-using-wheelchair-on-grass-web_3.jpg"
     ],
     measurements: {
       comprimento: 15.2,
@@ -84,7 +82,6 @@ const sampleApprovals: Approval[] = [
     createdAt: "2025-05-08T09:15:00",
     comments: "Cliente pediu ajustes na altura e no encaixe para maior conforto. Segunda revisão.",
     images: [
-      "https://www.petsrq.com/wp-content/uploads/2022/07/Dog-Prosthetic-Leg-2-1024x680.jpg",
       "https://vetmed.illinois.edu/wp-content/uploads/2021/05/p-patch-scaled-e1620657180619-768x576.jpeg"
     ],
     measurements: {
@@ -108,8 +105,7 @@ const sampleApprovals: Approval[] = [
     status: "approved",
     createdAt: "2025-05-05T11:45:00",
     images: [
-      "https://drsophiayin.com/app/uploads/2017/09/Glue-in-Cat-Prothesis-4.jpg",
-      "https://drsophiayin.com/app/uploads/2017/09/Glue-in-Cat-Prothesis-5-1024x689.jpg"
+      "https://drsophiayin.com/app/uploads/2017/09/Glue-in-Cat-Prothesis-4.jpg"
     ],
     measurements: {
       comprimento: 8.5,
@@ -133,7 +129,6 @@ const sampleApprovals: Approval[] = [
     createdAt: "2025-05-01T16:20:00",
     comments: "Medidas incompatíveis com o modelo proposto. Nova avaliação necessária.",
     images: [
-      "https://www.wakeupvet.com/hs-fs/hubfs/3d-printed-prosthetic-legs-for-dogs.jpg?width=600&height=338&name=3d-printed-prosthetic-legs-for-dogs.jpg",
       "https://www.calibrepress.com/wp-content/uploads/2019/12/GettyImages-1068693964-800x430.jpg"
     ],
     measurements: {
@@ -152,7 +147,7 @@ const ApprovalWorkflow = () => {
   const [approvals, setApprovals] = useState<Approval[]>(sampleApprovals);
   const [activeApproval, setActiveApproval] = useState<Approval | null>(null);
   const [activeTab, setActiveTab] = useState<ApprovalStatus | "all">("pending");
-  
+
   const getStatusColor = (status: ApprovalStatus) => {
     switch (status) {
       case "pending":
@@ -342,22 +337,29 @@ const ApprovalWorkflow = () => {
                     <div>
                       <h3 className="text-sm font-semibold mb-3">Visualização do Modelo</h3>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {activeApproval.images.map((img, index) => (
-                          <div key={index} className="bg-muted rounded-md overflow-hidden relative">
-                            <AspectRatio ratio={4/3} className="w-full">
-                              <img 
-                                src={img} 
-                                alt={`${activeApproval.designName} view ${index + 1}`}
-                                className="object-cover w-full h-full"
-                                onError={(e) => {
-                                  const target = e.target as HTMLImageElement;
-                                  target.onerror = null;
-                                  target.src = "https://placehold.co/400x300/e2e8f0/a0aec0?text=Imagem+não+disponível";
-                                }}
-                              />
-                            </AspectRatio>
+                        <div className="bg-muted rounded-md overflow-hidden relative">
+                          <AspectRatio ratio={4/3} className="w-full">
+                            <img 
+                              src={activeApproval.images[0]} 
+                              alt={`${activeApproval.petName} com ${activeApproval.designName}`}
+                              className="object-cover w-full h-full"
+                              onError={(e) => {
+                                const target = e.target as HTMLImageElement;
+                                target.onerror = null;
+                                target.src = "https://placehold.co/400x300/e2e8f0/a0aec0?text=Imagem+não+disponível";
+                              }}
+                            />
+                          </AspectRatio>
+                        </div>
+                        <div className="bg-muted rounded-md overflow-hidden flex items-center justify-center p-4">
+                          <div className="text-center">
+                            <div className="text-xl font-bold text-primary mb-2">{activeApproval.designName}</div>
+                            <div className="text-sm text-muted-foreground">
+                              Material: {activeApproval.materialType} <br />
+                              Versão: {activeApproval.designVersion}
+                            </div>
                           </div>
-                        ))}
+                        </div>
                       </div>
                     </div>
                     
