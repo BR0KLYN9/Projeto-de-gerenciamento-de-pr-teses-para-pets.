@@ -1,3 +1,4 @@
+
 import { Layout } from "@/components/Layout";
 import { useState } from "react";
 import { 
@@ -341,7 +342,7 @@ const ApprovalWorkflow = () => {
                           <AspectRatio ratio={4/3} className="w-full">
                             <img 
                               src={activeApproval.images[0]} 
-                              alt={`${activeApproval.petName} com ${activeApproval.designName}`}
+                              alt={`${activeApproval.petName}`}
                               className="object-cover w-full h-full"
                               onError={(e) => {
                                 const target = e.target as HTMLImageElement;
@@ -351,12 +352,12 @@ const ApprovalWorkflow = () => {
                             />
                           </AspectRatio>
                         </div>
-                        <div className="bg-muted rounded-md overflow-hidden flex items-center justify-center p-4">
+                        <div className="bg-gradient-to-br from-primary/10 to-secondary/10 rounded-md overflow-hidden flex items-center justify-center p-6">
                           <div className="text-center">
                             <div className="text-xl font-bold text-primary mb-2">{activeApproval.designName}</div>
                             <div className="text-sm text-muted-foreground">
-                              Material: {activeApproval.materialType} <br />
-                              Versão: {activeApproval.designVersion}
+                              <p className="mb-1"><span className="font-medium">Material:</span> {activeApproval.materialType}</p>
+                              <p><span className="font-medium">Versão:</span> {activeApproval.designVersion}</p>
                             </div>
                           </div>
                         </div>
